@@ -1,0 +1,28 @@
+all:
+  hosts:
+    wrc-dev1:
+      ansible_host: wrc-dev1.yc
+      ansible_user: yc-user
+      ansible_become: 'yes'
+      internal_ip: 10.130.0.11
+    nominatim:
+      internal_ip: '91.230.215.14'
+      nominatim_user: "nominatim_user"
+      nominatim_password: "nominatim_password"
+  vars:
+    monitoringUrl: http://wayrecall.ksb-stels.ru:9080
+  children:
+    wrc_server:
+      hosts:
+        wrc-dev1:
+    wrc_mongo:
+      hosts:
+        wrc-dev1:
+    wrc_pg:
+      hosts:
+        wrc-dev1:
+    wrc_nominatim:
+      hosts:
+        nominatim:
+    wrc_mongo_arb:
+      hosts:

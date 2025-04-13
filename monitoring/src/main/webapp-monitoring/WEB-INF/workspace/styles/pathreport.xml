@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FeatureTypeStyle xmlns="http://www.opengis.net/se" xmlns:app="http://www.deegree.org/app" xmlns:ogc="http://www.opengis.net/ogc" xmlns:sed="http://www.deegree.org/se"
+    xmlns:deegreeogc="http://www.deegree.org/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.opengis.net/se http://schemas.opengis.net/se/1.1.0/FeatureStyle.xsd http://www.deegree.org/se http://schemas.deegree.org/se/1.1.0/Symbolizer-deegree.xsd">
+  <Name>Roads</Name>
+  <Rule>
+    <Name>Roads</Name>
+      <LineSymbolizer>
+        <Stroke>
+          <SvgParameter name="stroke">#0000D1</SvgParameter>
+          <SvgParameter name="stroke-width">3.15</SvgParameter>
+          <SvgParameter name="stroke-linecap">butt</SvgParameter>
+          <SvgParameter name="stroke-opacity">0.7</SvgParameter>
+        </Stroke>
+      </LineSymbolizer>
+      <PointSymbolizer>
+          <Graphic>
+              <Mark>
+                  <WellKnownName>circle</WellKnownName>
+                  <Fill>
+                      <CssParameter name="fill">#0000D1</CssParameter>
+                  </Fill>
+                  <Stroke>
+                      <SvgParameter name="stroke">#0000D1</SvgParameter>
+                      <SvgParameter name="stroke-width">0</SvgParameter>
+                  </Stroke>
+              </Mark>
+              <Size>6</Size>
+          </Graphic>
+      </PointSymbolizer>
+      <!--<LineSymbolizer>-->
+        <!--<Stroke>-->
+          <!--<SvgParameter name="stroke">#000000</SvgParameter>-->
+          <!--<SvgParameter name="stroke-width">1</SvgParameter>-->
+          <!--<SvgParameter name="stroke-linecap">butt</SvgParameter>-->
+        <!--</Stroke>-->
+        <!--<PerpendicularOffset>-1.75</PerpendicularOffset>-->
+      <!--</LineSymbolizer>-->
+      <!--<LineSymbolizer>-->
+        <!--<Stroke>-->
+          <!--<SvgParameter name="stroke">#000000</SvgParameter>-->
+          <!--<SvgParameter name="stroke-width">1</SvgParameter>-->
+          <!--<SvgParameter name="stroke-linecap">butt</SvgParameter>-->
+        <!--</Stroke>-->
+        <!--<PerpendicularOffset>1.75</PerpendicularOffset>-->
+      <!--</LineSymbolizer>-->
+  </Rule>
+</FeatureTypeStyle>                    

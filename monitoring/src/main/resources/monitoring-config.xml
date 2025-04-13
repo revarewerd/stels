@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+<!--xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--xmlns:context="http://www.springframework.org/schema/context"-->
+<!--xmlns:jms="http://www.springframework.org/schema/jms"-->
+<!--xmlns:p="http://www.springframework.org/schema/p"-->
+<!--xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd-->
+<!--http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd-->
+<!--">-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${WAYRECALL_HOME}/conf/global.properties</value>
+                <value>file:${WAYRECALL_HOME}/conf/packreceiver.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--<context:component-scan base-package="ru.sosgps">-->
+    <!--<context:exclude-filter type="regex" expression="ru\.sosgps\.wayrecall\.packreceiver\..*" />-->
+    <!--</context:component-scan>-->
+    <context:component-scan base-package="ru.sosgps.wayrecall.monitoring">
+        <context:exclude-filter type="annotation" expression="ru.sosgps.wayrecall.utils.ExtDirectService"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <context:component-scan base-package="ru.sosgps.wayrecall.core"/>
+    <context:component-scan base-package="ru.sosgps.wayrecall.security"/>
+
+    <context:annotation-config/>
+
+    <bean id="sleepersDataStore" class="ru.sosgps.wayrecall.data.sleepers.SleepersDataStore"/>
+
+    <bean id="objectsPermissionsChecker" class="ru.sosgps.wayrecall.monitoring.security.DefaultObjectsPermissionsChecker"/>
+
+    <bean id="packageStore" class="ru.sosgps.wayrecall.data.PermissionChekedPackageStore">
+        <constructor-arg index="0" ref="cachedPackageStore"/>
+    </bean>
+
+
+
+    <!--<bean id="garbageProducer" class="ru.sosgps.wayrecall.monitoring.GarbageProducer"/>-->
+
+    <!--<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">-->
+        <!--<property name="beans">-->
+            <!--<map>-->
+                <!--<entry key="bean:name=garbageProducer" value-ref="garbageProducer"/>-->
+                <!--<entry key="bean:name=sleeperNotificationDetector" value-ref="sleeperNotificationDetector"/>-->
+            <!--</map>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean id="smsCommandProcessor11" class="ru.sosgps.wayrecall.sms.SMSCommandProcessor">
+        <property name="smsReceiver">
+            <bean class="ru.sosgps.wayrecall.sms.DemoSmsGate">
+                <property name="wrappedGate" ref="${global.smsgate}"/>
+                <property name="mockSmsGate" ref="mockSmsGate"/>
+            </bean>
+        </property>
+        <!--<property name="smsReceiver" ref="mockSmsGate"/>-->
+        <!--<property name="smsReceiver" ref="m2mSmsGate"/>-->
+    </bean>
+    <bean id="mockSmsGate" class="ru.sosgps.wayrecall.monitoring.web.MockSmsGate" autowire-candidate="false"
+          lazy-init="true">
+        <property name="responseInterval" value="2000"/>
+    </bean>
+
+
+    <bean id="nominatimDatabase" class="org.apache.tomcat.jdbc.pool.DataSource"
+          destroy-method="close" lazy-init="true" autowire-candidate="false">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="${packreceiver.nominatim.url}"/>
+        <property name="username" value="${packreceiver.nominatim.user}"/>
+        <property name="password" value="${packreceiver.nominatim.password}"/>
+        <property name="initialSize" value="1"/>
+        <property name="maxActive" value="${monitoring.nominatim.maxactive:2}"/>
+        <property name="testOnReturn" value="true"/>
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="maxAge" value="60000"/>
+    </bean>
+
+    <bean id="senielPostgres" class="org.apache.tomcat.jdbc.pool.DataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="${global.defaultpg.url}"/>
+        <property name="username" value="${global.defaultpg.user}"/>
+        <property name="password" value="${global.defaultpg.password}"/>
+        <property name="initialSize" value="1"/>
+        <property name="maxActive" value="${global.defaultpg.maxactive:8}"/>
+        <property name="maxWait" value="${global.defaultpg.maxWait:5000}"/>
+        <property name="testOnReturn" value="true"/>
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="maxAge" value="60000"/>
+    </bean>
+
+    <bean id="geozonesStore" class="ru.sosgps.wayrecall.monitoring.geozones.GeozonesStore"/>
+
+    <bean id="notificationDetector" class="ru.sosgps.wayrecall.monitoring.notifications.GpsNotificationDetector">
+        <property name="sms" ref="${global.smsgate}"/>
+        <property name="detectorPoolSize" value="${instance.gpsnotoficator.poolSize:1}"/>
+        <property name="detectorPoolSizeMax" value="${instance.gpsnotoficator.poolSizeMax:4}"/>
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.monitoring.processing.DistanceAggregationService" />
+
+    <bean id="sleeperNotificationDetector"
+          class="ru.sosgps.wayrecall.monitoring.notifications.SleeperNotificationDetector">
+        <property name="sms" ref="${global.smsgate}"/>
+    </bean>
+
+    <bean id="timedNotificationDetector" class="ru.sosgps.wayrecall.monitoring.notifications.TimedNotificationDetector" >
+        <property name="sms" ref="${global.smsgate}"/>
+        <property name="packStore" ref="cachedPackageStore" />
+        <property name="testInterval" value="${global.timedNotificationInterval}" />
+    </bean>
+
+    <bean id="directNominatimRegeocoder" class="ru.sosgps.wayrecall.regeocoding.DirectNominatimRegeocoder"
+          lazy-init="true" autowire-candidate="true">
+        <property name="enabled" value="${packreceiver.regeocoding.enabled}"/>
+    </bean>
+
+
+
+
+    <bean id="secureGateway" class="ru.sosgps.wayrecall.monitoring.SecureGatewayMock"/>
+
+    <jms:listener-container
+            container-type="default"
+            destination-type="topic"
+            connection-factory="connectionFactory"
+            acknowledge="auto">
+        <jms:listener destination="receiver.networkcommand.result" ref="gprsCommandProcessor" method="receive"/>
+    </jms:listener-container>
+
+    <bean id="gprsCommandProcessor" class="ru.sosgps.wayrecall.sms.GprsCommandProcessor" />
+
+    <bean class="ru.sosgps.wayrecall.monitoring.processing.fuelings.FuelingReportService" />
+</beans>

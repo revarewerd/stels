@@ -1,0 +1,90 @@
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:amq="http://activemq.apache.org/schema/core"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+  http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
+
+    <amq:broker useJmx="false" persistent="false">
+
+        <amq:systemUsage>
+            <amq:systemUsage>
+                <amq:memoryUsage>
+                    <amq:memoryUsage limit="100 mb"/>
+                </amq:memoryUsage>
+                <amq:storeUsage>
+                    <amq:storeUsage limit="1 gb" name="foo"/>
+                </amq:storeUsage>
+                <amq:tempUsage>
+                    <amq:tempUsage limit="100 mb"/>
+                </amq:tempUsage>
+            </amq:systemUsage>
+        </amq:systemUsage>
+
+        <amq:destinationPolicy>
+            <amq:policyMap>
+                <amq:policyEntries>
+                    <amq:policyEntry topic=">" producerFlowControl="true">
+                        <!-- The constantPendingMessageLimitStrategy is used to prevent
+                             slow topic consumers to block producers and affect other consumers
+                             by limiting the number of messages that are retained
+                             For more information, see:
+
+                             http://activemq.apache.org/slow-consumer-handling.html
+
+                        -->
+                        <amq:pendingMessageLimitStrategy>
+                            <amq:constantPendingMessageLimitStrategy limit="1000"/>
+                        </amq:pendingMessageLimitStrategy>
+                    </amq:policyEntry>
+                    <amq:policyEntry queue=">" producerFlowControl="true" memoryLimit="1mb">
+                        <!-- Use VM cursor for better latency
+                             For more information, see:
+
+                             http://activemq.apache.org/message-cursors.html
+
+                        <pendingQueuePolicy>
+                          <vmQueueCursor/>
+                        </pendingQueuePolicy>
+                        -->
+                    </amq:policyEntry>
+                </amq:policyEntries>
+            </amq:policyMap>
+        </amq:destinationPolicy>
+
+        <amq:networkConnectors>
+            <!--
+            <networkConnector uri="multicast://default?initialReconnectDelay=100" />
+            <networkConnector uri="static://(tcp://localhost:61616)" />
+             -->
+        </amq:networkConnectors>
+
+        <!--<amq:persistenceFactory>-->
+            <!--<amq:journalPersistenceAdapterFactory journalLogFiles="5" dataDirectory="~/target/foo"/>-->
+
+            <!--&lt;!&ndash; To use a different dataSource, use the following syntax : &ndash;&gt;-->
+            <!--&lt;!&ndash;-->
+            <!--<journalPersistenceAdapterFactory journalLogFiles="5" dataDirectory="${basedir}/activemq-data" dataSource="#mysql-ds"/>-->
+             <!--&ndash;&gt;-->
+        <!--</amq:persistenceFactory>-->
+
+        <amq:transportConnectors>
+            <amq:transportConnector name="nio" uri="nio://127.0.0.1:61616"/>
+            <!--<amq:transportConnector uri="tcp://localhost:61616"/>-->
+        </amq:transportConnectors>
+
+    </amq:broker>
+
+    <!-- MySql DataSource Sample Setup -->
+    <!--
+    <bean id="mysql-ds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+      <property name="url" value="jdbc:mysql://localhost/activemq?relaxAutoCommit=true"/>
+      <property name="username" value="activemq"/>
+      <property name="password" value="activemq"/>
+      <property name="poolPreparedStatements" value="true"/>
+    </bean>
+    -->
+</beans>

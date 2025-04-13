@@ -1,0 +1,16 @@
+0	Power	External	Internal
+1	Move/Stop	Stop	Move
+2	Over Speed	No	Yes
+3	Jamming	No	Yes
+4	Geo‐fence	No Alarm	Alarm
+5	Immobilize	Off	On
+6	ACC Status	Off	On
+7	Harsh Acceleration	No Alarm	Alarm
+8	Accident Acceleration	No Alarm	Alarm
+9	Ignition	Off	On
+10	Panic	Off	On
+11	OBDII Error	No Error Code	Error Code
+12	Angle Changed	No Alert	Alert
+13	Over Speed	No Alarm	Alarm
+14	Domestic Roaming	No Roaming	Roaming
+15	International Roaming	No Roaming	Roaming

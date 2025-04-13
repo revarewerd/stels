@@ -1,0 +1,14 @@
+# THIS FILE IS MANAGED BY ANSIBLE, DONT EDIT MANUALLY
+host: {{ groups['wrc_server'] | map('extract', hostvars, 'ansible_host') | first }}
+port: {{ groups['wrc_server'] | map('extract', hostvars, 'ansible_port') | first | default(22) }}
+mongodbs: {{ wrc_data['wrcinstances_data'] | map(attribute='mongo') | map(attribute='name') | list }}
+mongohosts: {{ groups['wrc_mongo'] | map('extract', hostvars, 'internal_ip') | list }}
+postgres:
+    user: "{{ pg_data['pg_user'] }}"
+    password: "{{ pg_data['pg_password'] }}"
+nominatim:
+    host: "{{ nominatim_data['internal_ip'] }}"
+    user: "{{ nominatim_data['nominatim_user'] }}"
+    password: "{{ nominatim_data['nominatim_password'] }}"
+wrc_instances: {{ wrc_data['wrcinstances_data'] | map(attribute='name') | list }}
+wrc_home: "{{ wrc_data.legacy_wrc_home | default('/opt/wayrecall/') }}"

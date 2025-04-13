@@ -1,0 +1,12 @@
+host: backupper@wayrecall.ksb-stels.ru
+mongodbs: [Seniel-dev2, Seniel-3gprotex]
+mongohosts: ['172.16.1.4', '172.16.1.5']
+postgres:
+  user: "seniel"
+  password: '<put-a-password-here>'
+nominatim:
+  host: '91.230.215.14'
+  user: "niks"
+  password: "<put-a-password-here>"
+wrc_instances: [hittele, default]
+wrc_home: "/home/niks/Wayrecallhome/"

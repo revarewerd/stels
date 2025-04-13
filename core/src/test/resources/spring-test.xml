@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       default-autowire="byType">
+
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+       <property name="locations">
+           <list>
+               <value>file:${WAYRECALL_HOME}/conf/test.properties</value>
+               <!--<value>file:${WAYRECALL_HOME}/conf/monitoring.properties</value>-->
+           </list>
+       </property>
+    </bean>
+
+    <!--<context:component-scan base-package="ru.sosgps"/>-->
+    <!--<context:annotation-config/>-->
+    
+        <bean id="objectsRepositoryReader" class="ru.sosgps.wayrecall.core.ObjectsRepositoryReader"/>
+
+
+    <bean id="mongoDBManager" class="ru.sosgps.wayrecall.core.MongoDBManager">
+        <property name="databaseName" value="${global.defaultmongodb.databaseName}" />
+        <property name="host" value="${global.defaultmongodb.host}" />
+        <property name="port" value="${global.defaultmongodb.port}" />
+    </bean>
+
+    <bean id="simpleLocalEventsStore" class="ru.sosgps.wayrecall.events.LocalEventsStore" />
+    
+    <bean class="ru.sosgps.wayrecall.data.MongoPackagesStore">
+        <property name="skipPreloadCache" value="true"/>
+    </bean>
+    
+    <bean class="ru.sosgps.wayrecall.data.CachedPackageStore"></bean>
+
+
+    <bean class="ru.sosgps.wayrecall.data.DummyPackDataConverter" />
+
+
+</beans>

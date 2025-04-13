@@ -1,0 +1,209 @@
+<configuration debug="false" scan="true" scanPeriod="30 seconds">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+     ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>true</immediateFlush>
+        </encoder>
+    </appender>
+
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>packreceiver-logs/main-${bySecond}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>packreceiver-logs/main-${bySecond}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>15</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>false</immediateFlush>
+        </encoder>
+    </appender>
+
+    <property file="${WAYRECALL_HOME}/conf/global.properties"/>
+
+    <appender name="MAIN_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE" />
+    </appender>
+
+    <appender name="REGEO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>packreceiver-logs/regeo-${bySecond}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>packreceiver-logs/regeo-${bySecond}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>1MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>false</immediateFlush>
+        </encoder>
+    </appender>
+
+    <appender name="REGEO_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="REGEO_FILE" />
+    </appender>
+
+    <appender name="INSERTER_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>packreceiver-logs/inserter-${bySecond}.log</file>
+
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">-->
+            <!--<fileNamePattern>packreceiver-logs/inserter-${bySecond}.%i.log.zip</fileNamePattern>-->
+            <!--<minIndex>1</minIndex>-->
+            <!--<maxIndex>20</maxIndex>-->
+        <!--</rollingPolicy>-->
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>packreceiver-logs/inserter-${bySecond}.%d{yyyy-MM-dd_HH}.log.gz</fileNamePattern>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>false</immediateFlush>
+        </encoder>
+    </appender>
+
+    <appender name="INSERTER_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="INSERTER_FILE" />
+    </appender>
+
+    <appender name="RETRANSLATOR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>packreceiver-logs/retranslator-${bySecond}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>packreceiver-logs/retranslator-${bySecond}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>true</immediateFlush>
+        </encoder>
+    </appender>
+
+    <appender name="RETRANSLATOR_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="RETRANSLATOR_FILE" />
+    </appender>
+
+    <logger name="ru.sosgps" level="debug"/>
+
+
+    <logger name="ru.sosgps.wayrecall.avlprotocols" additivity="false">
+        <appender-ref ref="INSERTER_FILE"/>
+    </logger>
+
+    <logger name="ru.sosgps.wayrecall.avlprotocols.navtelecom" level="debug" additivity="false">
+        <appender-ref ref="INSERTER_FILE"/>
+    </logger>
+    <logger name="ru.sosgps.wayrecall.avlprotocols.ruptela" level="debug" additivity="false">
+        <appender-ref ref="INSERTER_FILE"/>
+    </logger>
+
+    <logger name="ru.sosgps.wayrecall.packreceiver.netty" level="debug" additivity="false">
+        <appender-ref ref="INSERTER_FILE"/>
+    </logger>
+
+
+    <!--<logger name="ru.sosgps.wayrecall.packreceiver.netty.NavTelecomNettyServer" level="trace" additivity="false">-->
+        <!--<appender-ref ref="INSERTER_FILE"/>-->
+        <!--<appender-ref ref="STDOUT"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="ru.sosgps.wayrecall.packreceiver.netty.NavtelecomFirstStepDecoder" level="trace" additivity="false">-->
+        <!--<appender-ref ref="INSERTER_FILE"/>-->
+        <!--<appender-ref ref="STDOUT"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="ru.sosgps.wayrecall.packreceiver.netty.NavtelecomAvlDataDecoder" level="trace" additivity="false">-->
+        <!--<appender-ref ref="INSERTER_FILE"/>-->
+        <!--<appender-ref ref="STDOUT"/>-->
+    <!--</logger>  -->
+    <!-- -->
+    <logger name="ru.sosgps.wayrecall.avlprotocols.skysim.Skysim" level="trace" additivity="false">
+        <appender-ref ref="INSERTER_FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+
+    <logger name="ru.sosgps.wayrecall.packreceiver.netty.SkysimNettyServer" level="trace" additivity="false">
+        <appender-ref ref="INSERTER_FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="ru.sosgps.wayrecall.packreceiver.netty.SkysimHander" level="trace" additivity="false">
+        <appender-ref ref="INSERTER_FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!--<logger name="ru.sosgps.wayrecall.packreceiver.netty" level="trace" additivity="false">-->
+        <!--<appender-ref ref="STDOUT"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="ru.sosgps.wayrecall.avlprotocols.gosafe" level="trace" additivity="false">-->
+        <!--<appender-ref ref="INSERTER_FILE"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="ru.sosgps.wayrecall.packreceiver.blocking.TeltonikaPackReceiver" level="trace" additivity="false">-->
+        <!--<appender-ref ref="INSERTER_FILE"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="ru.sosgps.wayrecall.avlprotocols.teltonika" level="trace" additivity="false">-->
+        <!--<appender-ref ref="INSERTER_FILE"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="ru.sosgps.wayrecall.packreceiver.netty.TeltonikaAvlDataDecoder" level="trace" additivity="false">-->
+        <!--<appender-ref ref="INSERTER_FILE"/>-->
+    <!--</logger>-->
+
+    <logger name="ru.sosgps.wayrecall.regeocoding.ReGeocoder" level="info" additivity="false">
+        <appender-ref ref="REGEO_ASYNC"/>
+    </logger>
+
+    <!--<logger name="ru.sosgps.wayrecall.regeocoding.ReGeocoderRunner$" additivity="false">-->
+    <!--<appender-ref ref="REGEO_FILE" />-->
+    <!--</logger>-->
+
+    <logger name="ru.sosgps.wayrecall.regeocoding.ReGeocoderRunner" level="debug" additivity="false">
+        <appender-ref ref="REGEO_ASYNC"/>
+    </logger>
+
+    <logger name="ru.sosgps.wayrecall.data.PerObjectMongoPackStore" level="info">
+    </logger>
+
+    <logger name="ru.sosgps.wayrecall.retranslators" level="info" additivity="false">
+        <appender-ref ref="RETRANSLATOR_FILE"/>
+    </logger>
+
+    <!--<logger name="ru.sosgps.wayrecall.retranslators.WialonRealTimeRetranslator" level="trace" additivity="false">-->
+        <!--<appender-ref ref="RETRANSLATOR_FILE"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="ru.sosgps.wayrecall.retranslators.WialonNettyClientHandler" level="trace" additivity="false">-->
+        <!--<appender-ref ref="RETRANSLATOR_FILE"/>-->
+    <!--</logger>-->
+
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

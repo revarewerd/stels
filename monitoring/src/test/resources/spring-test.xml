@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--<context:component-scan base-package="ru.sosgps.wayrecall.monitoring">-->
+        <!--<context:exclude-filter type="annotation" expression="ru.sosgps.wayrecall.utils.ExtDirectService" />-->
+    <!--</context:component-scan>-->
+    <!--<context:component-scan base-package="ru.sosgps.wayrecall.core" />-->
+    <!--<context:component-scan base-package="ru.sosgps.wayrecall.security" />-->
+
+    <bean class="java.util.Timer"/>
+
+    <bean id="objectsRepositoryReader" class="ru.sosgps.wayrecall.core.ObjectsRepositoryReader"/>
+
+    <bean id="permissionsChecker" class="ru.sosgps.wayrecall.security.AllPermissivePermissionsChecker">
+        <property name="defaultUsers">
+            <array>
+                <value>1234</value>
+            </array>
+        </property>
+    </bean>
+    <!--<bean id="permissionsChecker" class="ru.sosgps.wayrecall.security.DefaultObjectsPermissionsChecker"/>-->
+
+    <bean id="mongoDBManager" class="ru.sosgps.wayrecall.core.MongoDBManager">
+        <property name="databaseName" value="Seniel-test"/>
+    </bean>
+
+    <bean id="eventsStore" class="ru.sosgps.wayrecall.events.LocalEventsStore"/>
+
+    <bean class="ru.sosgps.wayrecall.data.DummyPackDataConverter" />
+
+    <bean class="ru.sosgps.wayrecall.data.MongoPackagesStore">
+        <property name="skipPreloadCache" value="true"/>
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.data.DirectMongoDBPacketsWriter"/>
+
+     <bean id="sleepersDataStore" class="ru.sosgps.wayrecall.data.sleepers.SleepersDataStore"/>
+
+    <bean id="removalIntervals" class="ru.sosgps.wayrecall.data.RemovalIntervalsManager"/>
+
+
+    <bean id="sameThreadExecutorService" class="ru.sosgps.wayrecall.utils.concurrent.SameThreadExecutorService"/>
+
+
+    <bean id="mockSmsGate" class="ru.sosgps.wayrecall.monitoring.web.MockSmsGate" autowire-candidate="true" lazy-init="true" >
+        <property name="responseInterval" value="20" />
+    </bean>
+
+    <bean id="eventedObjectCommander" class="ru.sosgps.wayrecall.monitoring.web.EventedObjectCommander" >
+        <property name="notificationPool" ref="sameThreadExecutorService"/>
+        <property name="thread" ref="sameThreadExecutorService"/>
+    </bean>
+
+    <bean id="objectsCommander" class="ru.sosgps.wayrecall.monitoring.web.ObjectsCommander" />
+
+    <bean id="smsCommandProcessor" class="ru.sosgps.wayrecall.sms.SMSCommandProcessor" >
+        <property name="smsReceiver" ref="mockSmsGate"/>
+    </bean>
+
+    <bean id="senielPostgres" class="org.apache.tomcat.jdbc.pool.DataSource"
+          destroy-method="close" >
+        <property name="driverClassName" value="org.postgresql.Driver" />
+        <property name="url" value="jdbc:postgresql://localhost/seniel-pg" />
+        <property name="username" value="nickl" />
+        <property name="password" value="$ttt" />
+        <property name="initialSize" value="1" />
+        <property name="maxActive" value="20" />
+        <property name="testOnReturn" value="true" />
+        <property name="validationQuery" value="SELECT 1" />
+        <property name="maxAge" value="60000" />
+    </bean>
+
+    <bean id="mailSender" class="ru.sosgps.wayrecall.utils.MailSender">
+        <!--<property name="email" value="${global.sysemail}" />-->
+        <!--<property name="host" value="${global.sysemail.smtphost}" />-->
+        <!--<property name="login" value="${global.sysemail.login}" />-->
+        <!--<property name="password" value="${global.sysemail.password}" />-->
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.core.finance.TariffPlans"/>
+    <bean class="ru.sosgps.wayrecall.core.finance.FeeProcessor"/>
+
+    <bean class="org.axonframework.eventhandling.SimpleEventBus"/>
+
+    <bean id="secureGateway" class="ru.sosgps.wayrecall.monitoring.SecureGatewayMock"/>
+
+    <bean id="gprsCommandProcessor" class="ru.sosgps.wayrecall.sms.MockGprsCommandProcessor">
+        <property name="timeout" value="500"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,10 @@
+0	Power Off	No	Alarm
+1	Move	No	Alarm
+2	Over Speed	No	Alarm
+3	Jamming	No	Alarm
+4	Geo‐fence	No	Alarm
+10	Panic	No	Alarm
+11	OBD Error	No	Alarm
+13	Battery Low	No	Alarm
+14	Engine Temperature	No	Alarm
+15	Engine Speed	No	Alarm

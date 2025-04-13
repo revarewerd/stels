@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+">
+    <import resource="security-app-context.xml"/>
+
+    <context:component-scan base-package="ru.sosgps.wayrecall.core"/>
+    <context:component-scan base-package="ru.sosgps.wayrecall.security"/>
+    <context:component-scan base-package="ru.sosgps.wayrecall.data"/>
+
+
+    <bean id="lbsConverter" class="ru.sosgps.wayrecall.data.sleepers.MongoStoredLBSConverter">
+    <property name="innerConverter">
+        <bean class="ru.sosgps.wayrecall.data.sleepers.LBSHttp">
+            <property name="method" value="${global.lbs.method:ultrastar}"/>
+        </bean>
+    </property>
+    </bean>
+    <!--&lt;!&ndash;<bean id="tariffPlans" class="ru.sosgps.wayrecall.core.finance.TariffPlans"/>&ndash;&gt;-->
+    <bean id="sleepersDataStore" class="ru.sosgps.wayrecall.data.sleepers.SleepersDataStore"/>
+    <bean id="objectsPermissionsChecker" class="ru.sosgps.wayrecall.security.AllPermissivePermissionsChecker"/>
+    <bean id="packageStore" class="ru.sosgps.wayrecall.data.PermissionChekedPackageStore">
+        <constructor-arg index="0" ref="cachedPackageStore"/>
+    </bean>
+    <bean id="dbPacketsWriter" class="ru.sosgps.wayrecall.data.PermissionCheckedDBPacketsWriter">
+        <constructor-arg index="0">
+            <bean class="ru.sosgps.wayrecall.data.DirectMongoDBPacketsWriter"/>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${WAYRECALL_HOME}/conf/global.properties</value>
+            </list>
+        </property>
+    </bean>
+</beans>

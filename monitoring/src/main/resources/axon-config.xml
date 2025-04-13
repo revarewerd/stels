@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+       ">
+
+
+    <context:annotation-config/>
+
+    <!--<axon:command-bus id="commandBus">-->
+        <!--<axon:dispatchInterceptors>-->
+            <!--<ref bean="secureInterceptor"/>-->
+        <!--</axon:dispatchInterceptors>-->
+        <!--<axon:handlerInterceptors>-->
+            <!--<ref bean ="auditingInterceptor"/>-->
+        <!--</axon:handlerInterceptors>-->
+    <!--</axon:command-bus>-->
+
+    <bean id="commandBus" class="ru.sosgps.wayrecall.utils.SpringContextCommandBusWrapper">
+        <constructor-arg index="0">
+            <bean  class="org.axonframework.commandhandling.SimpleCommandBus" >
+                <property name="dispatchInterceptors">
+                    <ref bean="secureInterceptor"/>
+                </property>
+                <property name="handlerInterceptors">
+                    <ref bean="auditingInterceptor"/>
+                </property>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <!--<bean id="eventBusProxy" class="ru.sosgps.wayrecall.utils.EventBusProxy">-->
+        <!--<constructor-arg index="0" ref="eventBus"/>-->
+    <!--</bean>-->
+
+
+    <bean id="commandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="gatewayInterface" value="ru.sosgps.wayrecall.core.SecureGateway"/>
+    </bean>
+
+    <bean id="secureInterceptor" class="ru.sosgps.wayrecall.core.SecureInterceptor"/>
+
+    <bean id="metaDataProvider" class="org.axonframework.auditing.CommandMetaDataProvider"/>
+
+    <bean id="auditingInterceptor" class="org.axonframework.auditing.AuditingInterceptor">
+        <property name="auditDataProvider" ref="metaDataProvider"/>
+    </bean>
+
+    <!--,"domainEvents","snapshotEvents",null,null-->
+    <!--bean id="eventStore" class="org.axonframework.eventstore.mongo.MongoEventStore"-->
+
+    <bean id="eventStore" class="ru.sosgps.wayrecall.core.axon.AxonEventsWriter">
+        <constructor-arg index="0">
+            <bean class="org.axonframework.serializer.bson.DBObjectXStreamSerializer">
+                <constructor-arg>
+                    <bean class="ru.sosgps.wayrecall.utils.io.XStreamBuilder" factory-method="getXStream" />
+                </constructor-arg>
+                    </bean>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <bean class="org.axonframework.eventstore.mongo.DefaultMongoTemplate">
+                <constructor-arg index="0" >
+                    <bean factory-bean="mongoDBManager" factory-method="getClient"/>
+                </constructor-arg>
+                <constructor-arg index="1" >
+                    <bean factory-bean="mongoDBManager" factory-method="getDatabaseName"/>
+                </constructor-arg>
+                <constructor-arg index="2" value="domainEvents"/>
+                <constructor-arg index="3" value="snapshotEvents"/>
+                <constructor-arg index="4">
+                    <null/>
+                </constructor-arg>
+                <constructor-arg index="5">
+                    <null/>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+
+        <property name="viewCollectionName" value="domainEventsView"/>
+    </bean>
+
+
+    <bean id="snapshotter" class="org.axonframework.eventsourcing.SpringAggregateSnapshotter">
+        <property name="eventStore" ref="eventStore"/>
+        <property name="executor">
+            <util:constant static-field="org.axonframework.common.DirectExecutor.INSTANCE"/>
+        </property>
+    </bean>
+
+
+    
+    
+    <axon:event-sourcing-repository id="objectsAggregatesRepository"
+                                    aggregate-type="ru.sosgps.wayrecall.billing.objectcqrs.ObjectAggregate">
+        <axon:snapshotter-trigger event-count-threshold="5" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
+    <axon:event-sourcing-repository id="equipmentsAggregatesRepository"
+                                    aggregate-type="ru.sosgps.wayrecall.billing.equipment.EquipmentAggregate">
+        <axon:snapshotter-trigger event-count-threshold="5" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>                                    
+    <axon:event-sourcing-repository id="accountsAggregatesRepository"
+                                    aggregate-type="ru.sosgps.wayrecall.billing.account.AccountAggregate">
+        <axon:snapshotter-trigger event-count-threshold="5" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
+    <axon:event-sourcing-repository id="usersAggregatesRepository"
+                                    aggregate-type="ru.sosgps.wayrecall.billing.user.UserAggregate">
+        <axon:snapshotter-trigger event-count-threshold="5" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
+    <axon:event-sourcing-repository id="permissionAggregatesRepository"
+                                    aggregate-type="ru.sosgps.wayrecall.billing.user.PermissionAggregate">
+        <axon:snapshotter-trigger event-count-threshold="5" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
+    <axon:event-sourcing-repository id="equipmentTypesAggregatesRepository"
+                                    aggregate-type="ru.sosgps.wayrecall.billing.equipment.types.EquipmentTypesAggregate">
+        <axon:snapshotter-trigger event-count-threshold="5" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
+    <axon:event-sourcing-repository id="tariffPlanAggregatesRepository"
+                                    aggregate-type="ru.sosgps.wayrecall.billing.tariff.TariffPlanAggregate">
+        <axon:snapshotter-trigger event-count-threshold="5" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
+    <axon:event-sourcing-repository id="ticketAggregatesRepository"
+                                    aggregate-type="ru.sosgps.wayrecall.workflow.TicketAggregate">
+        <axon:snapshotter-trigger event-count-threshold="5" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
+<axon:event-sourcing-repository id="dealerAggregatesRepository"
+                                    aggregate-type="ru.sosgps.wayrecall.billing.dealer.DealerAggregate">
+        <axon:snapshotter-trigger event-count-threshold="5" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
+
+    <axon:aggregate-command-handler aggregate-type="ru.sosgps.wayrecall.billing.objectcqrs.ObjectAggregate"
+                                    repository="objectsAggregatesRepository"
+                                    command-bus="commandBus"/>
+    <axon:aggregate-command-handler aggregate-type="ru.sosgps.wayrecall.billing.equipment.EquipmentAggregate"
+                                    repository="equipmentsAggregatesRepository"
+                                    command-bus="commandBus"/>
+    <axon:aggregate-command-handler aggregate-type="ru.sosgps.wayrecall.billing.account.AccountAggregate"
+                                    repository="accountsAggregatesRepository"
+                                    command-bus="commandBus"/>
+     <axon:aggregate-command-handler aggregate-type="ru.sosgps.wayrecall.billing.user.UserAggregate"
+                                    repository="usersAggregatesRepository"
+                                    command-bus="commandBus"/>
+     <axon:aggregate-command-handler aggregate-type="ru.sosgps.wayrecall.billing.user.PermissionAggregate"
+                                    repository="permissionAggregatesRepository"
+                                    command-bus="commandBus"/>
+    <axon:aggregate-command-handler aggregate-type="ru.sosgps.wayrecall.billing.equipment.types.EquipmentTypesAggregate"
+                                    repository="equipmentTypesAggregatesRepository"
+                                    command-bus="commandBus"/>
+    <axon:aggregate-command-handler aggregate-type="ru.sosgps.wayrecall.billing.tariff.TariffPlanAggregate"
+                                    repository="tariffPlanAggregatesRepository"
+                                    command-bus="commandBus"/>
+    <axon:aggregate-command-handler aggregate-type="ru.sosgps.wayrecall.workflow.TicketAggregate"
+                                    repository="ticketAggregatesRepository"
+                                    command-bus="commandBus"/>
+
+    <bean class="ru.sosgps.wayrecall.billing.dealer.DealerCommandsHandler" />
+
+
+    
+     <bean class="ru.sosgps.wayrecall.billing.objectcqrs.ObjectCommandHandler"/>
+     <!--<bean class="ru.sosgps.wayrecall.billing.object.ObjectsRepositoryWriter"/>-->
+     <bean class="ru.sosgps.wayrecall.billing.equipment.EquipmentCommandHandler"/>
+    <bean class="ru.sosgps.wayrecall.workflow.TicketCommandHandler"/>
+     <bean class="ru.sosgps.wayrecall.billing.account.AccountEventHandler"/>
+     <bean class="ru.sosgps.wayrecall.billing.user.UserEventHandler"/>
+     <bean class="ru.sosgps.wayrecall.billing.user.PermissionEventHandler"/>
+     <bean class="ru.sosgps.wayrecall.billing.equipment.types.EquipmentTypesEventHandler"/>
+     <bean class="ru.sosgps.wayrecall.billing.tariff.TariffPlanEventHandler"/>
+ <bean class="ru.sosgps.wayrecall.workflow.TicketEventsHandler"/>
+  <bean class="ru.sosgps.wayrecall.billing.dealer.DealerReadDBWriter"/>
+     <bean class="ru.sosgps.wayrecall.billing.LegacyEventHandlersAdapter"/>
+
+    <axon:annotation-config />
+
+
+</beans>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${WAYRECALL_HOME}/conf/global.properties</value>
+                <value>file:${WAYRECALL_HOME}/conf/packreceiver.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <!--<bean id="mongoDBManager" class="ru.sosgps.wayrecall.core.MongoDBManager">-->
+        <!--<property name="databaseName" value="${global.defaultmongodb.databaseName}" />-->
+        <!--<property name="host" value="${global.defaultmongodb.host}" />-->
+        <!--<property name="port" value="${global.defaultmongodb.port}" />-->
+    <!--</bean>-->
+
+    <bean id="nominatimJsonReGeocoder" class="ru.sosgps.wayrecall.regeocoding.NominatimJsonReGeocoder"
+          autowire-candidate="false" lazy-init="true">
+        <property name="enabled" value="${packreceiver.regeocoding.enabled}"></property>
+        <property name="regeocodingServiceURL" value="${packreceiver.regeocoding.nominatimServer}"></property>
+        <!--<property name="regeocodingServiceURL" value="http://open.mapquestapi.com/nominatim/v1/reverse"></property>-->
+    </bean>
+
+    <bean id="nominatimDatabase" class="org.apache.tomcat.jdbc.pool.DataSource"
+          destroy-method="close" lazy-init="true">
+        <property name="driverClassName" value="org.postgresql.Driver" />
+        <property name="url" value="${packreceiver.nominatim.url}" />
+        <property name="username" value="${packreceiver.nominatim.user}" />
+        <property name="password" value="${packreceiver.nominatim.password}" />
+        <property name="initialSize" value="${packreceiver.regeocoder.parallel}" />
+        <property name="maxActive" value="${packreceiver.nominatim.maxActive:4}" />
+        <property name="testOnReturn" value="true" />
+        <property name="validationQuery" value="SELECT 1" />
+        <property name="maxAge" value="60000" />
+    </bean>
+
+    <bean id="directNominatimRegeocoder" class="ru.sosgps.wayrecall.regeocoding.DirectNominatimRegeocoder"
+          lazy-init="true" autowire-candidate="false">
+        <property name="enabled" value="${packreceiver.regeocoding.enabled}"/>
+        <property name="parallel" value="${packreceiver.regeocoder.parallel}"/>
+        <property name="cachePrecision" value="${packreceiver.regeocoder.cachePrecision}"/>
+    </bean>
+
+
+</beans>

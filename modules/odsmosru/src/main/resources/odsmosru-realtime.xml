@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+       <!--xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+       <!--xmlns:context="http://www.springframework.org/schema/context"-->
+       <!--xmlns:jms="http://www.springframework.org/schema/jms"-->
+       <!--xmlns:p="http://www.springframework.org/schema/p"-->
+       <!--xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd-->
+          <!--http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd-->
+<!--">-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+    </bean>
+
+    <!--<context:component-scan base-package="ru.sosgps"/>-->
+    <!--<context:annotation-config/>-->
+
+    <bean id="mongoDBManager" class="ru.sosgps.wayrecall.core.MongoDBManager">
+        <property name="databaseName" value="${instance.defaultmongodb.databaseName}"/>
+        <property name="host" value="${instance.defaultmongodb.servers}"/>
+        <property name="port" value="${instance.defaultmongodb.port}"/>
+    </bean>
+
+
+    <bean id="executorService" class="ru.sosgps.wayrecall.utils.concurrent.ScalaExecutorService">
+        <constructor-arg index="0" type="java.lang.String">
+            <value type="java.lang.String">odsSendingpool</value>
+        </constructor-arg>
+        <constructor-arg index="1"  type="int" value="2"/>
+        <constructor-arg index="2" value="16"/>
+        <constructor-arg index="3" type="boolean" value="true"/>
+        <constructor-arg index="4" value="1"/>
+        <constructor-arg index="5">
+            <util:constant static-field="java.util.concurrent.TimeUnit.HOURS"/>
+        </constructor-arg>
+        <constructor-arg index="6">
+            <bean class="java.util.concurrent.ArrayBlockingQueue">
+                <constructor-arg index="0" value="30000"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg index="7">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$AbortPolicy"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="resender" class="ru.sosgps.wayrecall.odsmosru.Resender" init-method="init" />
+
+    <bean class="ru.sosgps.wayrecall.odsmosru.RepeatedlyODSMosruSender">
+        <!--<constructor-arg index="0" ref="executorService"/>-->
+        <!--<property name="url" value="${global.odsmosru.wsdl}"/>-->
+        <property name="timeOut" value="${global.odsmosru.timeout:5000}"/>
+    </bean>
+
+    <!--<bean class="ru.sosgps.wayrecall.odsmosru.AccountEnabledChecker"/>-->
+    <bean class="ru.sosgps.wayrecall.odsmosru.AllowAllEnabledChecker"/>
+    <!-- A JMS connection factory for ActiveMQ -->
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
+          p:brokerURL="${global.amqBrokerURL}" />
+
+
+    <!-- The Spring message listener container configuration -->
+    <jms:listener-container
+            container-type="default"
+            destination-type="topic"
+            connection-factory="connectionFactory"
+            acknowledge="auto">
+        <jms:listener destination="#{'${instance.name}'+'.receiver.newmessage'}" ref="resender"/>
+    </jms:listener-container>
+
+    <bean id="annotationEventListenerBeanPostProcessor"
+          class="org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPostProcessor"
+          init-method="start"
+          destroy-method="stop"
+            />
+
+    <bean id="jmsEventBusTerminal" class="ru.sosgps.wayrecall.core.JMSEventBusTerminal" init-method="init">
+        <constructor-arg index="0" value="true"/>
+        <property name="topicPrefix" value="${instance.name}"/>
+    </bean>
+
+    <bean id="eventBus" class="org.axonframework.eventhandling.ClusteringEventBus" primary="true">
+        <constructor-arg index="0" ref="jmsEventBusTerminal"/>
+    </bean>
+
+    <context:annotation-config/>
+
+</beans>

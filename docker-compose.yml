@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  mongo-wrc:
+    image: mongo:3.4
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27016:27017
+      - 27017:27017
+    ulimits:
+      nproc: 1000000
+      nofile:
+        soft: 1000000
+        hard: 1000000
+    command: mongod
+
+  seniel-pg:
+    image: kartoza/postgis:9.6-2.4
+    volumes:
+      - ./pg/postgres_data:/var/lib/postgresql
+      - ./monitoring/src/main/resources/ru/sosgps/wayrecall/monitoring/geozones.sql:/docker-entrypoint-initdb.d/setup-db.sql
+    environment:
+      - POSTGRES_USER=nickl
+      - POSTGRES_PASS=ttt
+      - POSTGRES_DBNAME=seniel-pg
+    ports:
+    - 5432:5432

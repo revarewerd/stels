@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+       ">
+
+    <context:annotation-config/>
+    <import resource="axon-config.xml"/>
+
+    <bean id="producerTemplate"
+          class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="cachedConnectionFactory"/>
+        <property name="pubSubDomain" value="true"/>
+        <property name="explicitQosEnabled" value="true"/>
+        <property name="deliveryPersistent" value="false"/>
+        <!--<property name="explicitQosEnabled" value="true"/>-->
+        <!--<property name="deliveryMode">-->
+        <!--<util:constant static-field="javax.jms.DeliveryMode.NON_PERSISTENT"/>-->
+        <!--</property>-->
+    </bean>
+
+    <bean id="jmsEventBusTerminal" class="ru.sosgps.wayrecall.core.JMSEventBusTerminal">
+        <property name="topicPrefix" value="${instance.name}"/>
+    </bean>
+
+    <bean id="eventBus" class="org.axonframework.eventhandling.ClusteringEventBus" primary="true">
+        <constructor-arg index="0">
+            <bean class="org.axonframework.eventhandling.DefaultClusterSelector">
+                <constructor-arg index="0" ref="defaultCluster"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg index="1" ref="jmsEventBusTerminal"/>
+    </bean>
+
+    <!--<axon:event-bus id="eventBus" terminal="jmsEventBusTerminal"/>-->
+
+    <axon:cluster id="defaultCluster" default="true">
+        <bean class="org.axonframework.eventhandling.SimpleCluster">
+            <constructor-arg index="0" value="defaultCluster" />
+            <constructor-arg index="1">
+                <bean class="org.axonframework.eventhandling.SpringAnnotationOrderResolver"/>
+            </constructor-arg>
+        </bean>
+    </axon:cluster>
+
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <!--<property name="locations">-->
+            <!--<list>-->
+                <!--<value>file:${WAYRECALL_HOME}/conf/global.properties</value>-->
+            <!--</list>-->
+        <!--</property>-->
+    </bean>
+
+    <bean id="mongoDBManager" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <!--"#{'${instance.name}'+'.receiver.newmessage'}"-->
+        <property name="expectedType" value="ru.sosgps.wayrecall.core.MongoDBManager"/>
+        <property name="jndiName" value="#{'java:global/env/mdbm/'+'${instance.name}'}"/>
+    </bean>
+
+    <!--<bean id="mongoDBManager" class="ru.sosgps.wayrecall.core.MongoDBManager">-->
+    <!--<property name="databaseName" value="${instance.defaultmongodb.databaseName}"/>-->
+    <!--<property name="host" value="${instance.defaultmongodb.host}"/>-->
+    <!--<property name="port" value="${instance.defaultmongodb.port}"/>-->
+    <!--<property name="maxWaitTime" value="${instance.defaultmongodb.waitTime:120000}"/>-->
+    <!--<property name="connectionsPerHost" value="${instance.defaultmongodb.connectionsPerHost:32}"/>-->
+    <!--</bean>-->
+
+    <bean id="removalRestorationManager" class="ru.sosgps.wayrecall.billing.RemovalRestorationManager">
+    </bean>
+    <bean class="ru.sosgps.wayrecall.billing.account.AccountRepository"/>
+
+
+    <bean id="removalIntervals" class="ru.sosgps.wayrecall.data.RemovalIntervalsManager"/>
+
+    <bean id="balanceHistoryDAO" class="ru.sosgps.wayrecall.domain.balance.BalanceHistoryDAO"/>
+
+    <bean id="balanceHistoryService" class="ru.sosgps.wayrecall.domain.balance.BalanceHistoryService"/>
+
+    <bean id="packDataConverter" class="ru.sosgps.wayrecall.data.MapProtocolPackConverter"/>
+
+    <bean id="cachedPackageStore" class="ru.sosgps.wayrecall.data.CachedPackageStore" autowire-candidate="false">
+        <property name="wrapped" ref="directPackageStore"/>
+    </bean>
+    <bean id="directPackageStore" autowire-candidate="false" class="ru.sosgps.wayrecall.data.DemoDataProvider">
+        <constructor-arg index="0">
+            <bean autowire-candidate="false" class="ru.sosgps.wayrecall.data.FilteredPackageStore">
+                <property name="mongoStore" ref="mongoPackStore"/>
+            </bean>
+
+        </constructor-arg>
+    </bean>
+    <bean id="mongoPackStore" autowire-candidate="false" class="ru.sosgps.wayrecall.data.MongoPackagesStore">
+        <property name="skipPreloadCache" value="true"/>
+    </bean>
+
+    <bean id="mailSender" class="ru.sosgps.wayrecall.utils.MailSender">
+        <property name="email" value="${global.sysemail}"/>
+        <property name="host" value="${global.sysemail.smtphost}"/>
+        <property name="login" value="${global.sysemail.login}"/>
+        <property name="password" value="${global.sysemail.password}"/>
+        <property name="allowedAddress" value="${global.sysemail.allowedto:}"/>
+    </bean>
+
+    <bean id="mailErrorReporter" class="ru.sosgps.wayrecall.utils.errors.MailErrorReporter">
+        <constructor-arg index="0" ref="mailSender"/>
+        <constructor-arg index="1" value="${global.errornotificationAddress:}"/>
+    </bean>
+
+    <bean id="paymentServer" class="ru.sosgps.wayrecall.payment.PaymentServer">
+        <property name="port" value="${instance.payment.port:-1}"/>
+        <property name="instanceName" value="${instance.name}"/>
+    </bean>
+
+    <bean id="paymentParams" class="ru.sosgps.wayrecall.payment.PaymentParams">
+        <constructor-arg name="shopId" value="${instance.payment.shopId:-1}"/>
+        <constructor-arg name="scId" value="${instance.payment.scId:-1}"/>
+        <constructor-arg  name="shopPassword" value="${instance.payment.shopPassword:-1}"/>
+        <constructor-arg  name="paymentServerUrl" value="${instance.payment.paymentServerUrl:-1}"/>
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.initialization.JNDIMultiDbManager" id="multiDbManager" autowire-candidate="false">
+        <property name="config" ref="multiserverConfig"/>
+    </bean>
+
+    <bean id="multiserverConfig" class="ru.sosgps.wayrecall.initialization.MultiserverConfig" autowire-candidate="false">
+        <constructor-arg index="0" value="file:///${WAYRECALL_HOME}/conf"/>
+    </bean>
+
+    <bean id="objectsRepositoryWriter" class="ru.sosgps.wayrecall.billing.object.ObjectsRepositoryWriter">
+        <property name="multiDbManager" ref="multiDbManager"/>
+    </bean>
+
+    <bean id="repoDeleter" class="ru.sosgps.wayrecall.billing.object.AggregateRepoDeleter"/>
+
+    <bean id="eventsStore" class="ru.sosgps.wayrecall.events.MongoEventsStore"/>
+
+    <bean id="timer" class="java.util.Timer"/>
+
+    <!-- A cached connection to wrap the ActiveMQ connection -->
+    <bean id="cachedConnectionFactory"
+          class="org.springframework.jms.connection.CachingConnectionFactory">
+        <property name="targetConnectionFactory" ref="amqConnectionFactory"/>
+    </bean>
+
+    <bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory" autowire-candidate="false" >
+        <property name="brokerURL" value="${global.amqBrokerURL}"/>
+        <property name="useAsyncSend" value="true"/>
+    </bean>
+
+    <!-- A JMS connection factory for ActiveMQ -->
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
+          p:brokerURL="${global.amqBrokerURL}" autowire-candidate="false"/>
+
+    <jms:listener-container
+            container-type="default"
+            destination-type="topic"
+            connection-factory="connectionFactory"
+            acknowledge="auto">
+        <jms:listener destination="smses.httpreceived" ref="m2mSmsGate"/>
+        <jms:listener destination="#{'${instance.name}'+'.receiver.newmessage'}" ref="newGpsEventMapper"/>
+        <jms:listener destination="dealers.imeiOwnerChanged" ref="multiDbManager" method="invalidateImeiOwner"/>
+    </jms:listener-container>
+
+    <bean id="newGpsEventMapper" class="ru.sosgps.wayrecall.data.NewGpsEventMapper"/>
+    
+    <bean id="m2mSmsGate" class="ru.sosgps.wayrecall.mtsmarketolog.MtsMarketologRestSmsGate" autowire-candidate="false" lazy-init="false" >
+        <property name="smsListener">
+            <!--<bean class="ru.sosgps.wayrecall.sms.SmsPublisher" />-->
+            <bean class="ru.sosgps.wayrecall.sms.SmsListenersCollection">
+                <property name="listeners">
+                    <list>
+                        <bean class="ru.sosgps.wayrecall.sms.SmsPublisher" />
+                        <bean class="ru.sosgps.wayrecall.billing.dealer.SMSPayer" />
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="portFactory" class="ru.sosgps.wayrecall.m2msms.M2MClientFactory" autowire-candidate="false"
+          lazy-init="true"/>
+
+    <!--<bean id="monitoringwebapp-SessionManager" class="ru.sosgps.wayrecall.initialization.WayrecallHashSessionManager" />-->
+    <bean id="monitoringwebapp-SessionManager" class="ru.sosgps.wayrecall.initialization.WayrecallMongoSessionManager" >
+    </bean>
+
+    <bean id="billingUserRolesChecker" class="ru.sosgps.wayrecall.billing.security.BillingUserRolesChecker" />
+    <bean class="ru.sosgps.wayrecall.monitoring.OSMTilesCache" />
+
+    <bean class="ru.sosgps.wayrecall.core.Translations"/>
+    <bean class="ru.sosgps.wayrecall.billing.security.PermissionsEditor"/>
+
+    <bean id="lbsConverter" class="ru.sosgps.wayrecall.data.sleepers.MongoStoredLBSConverter">
+        <property name="innerConverter">
+            <bean class="ru.sosgps.wayrecall.data.sleepers.LBSHttp">
+                <property name="method" value="${global.lbs.method:ultrastar}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="eventViewConverter" class="ru.sosgps.wayrecall.core.axon.EventsViewConverter"/>
+
+    <bean class="ru.sosgps.wayrecall.core.axon.AxonEventHandlerUnwrapper"/>
+    <bean id="tariffDAO" class="ru.sosgps.wayrecall.billing.tariff.TariffDAO"/>
+    <bean id="tariffEDS" class="ru.sosgps.wayrecall.billing.tariff.TariffEDS"/>
+    
+    <bean id="oneSignalPlayerIdStorage" class="ru.sosgps.wayrecall.monitoring.notifications.OneSignalPlayerIdStorage"/>
+    <bean id="oneSignalPusher" class="ru.sosgps.wayrecall.monitoring.notifications.OneSignalPusher">
+        <constructor-arg name="id" value="${instance.onesignal.id:null}"/>
+        <constructor-arg name="restKey" value="${instance.onesignal.restKey:null}"/>
+    </bean>
+</beans>

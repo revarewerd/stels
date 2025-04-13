@@ -1,0 +1,6 @@
+.idea/*
+target/*
+${env.WAYRECALL_HOME}/*
+WAYRECALL_HOME_IS_UNDEFINED/*
+
+*.iml

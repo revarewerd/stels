@@ -1,0 +1,303 @@
+[
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241be660cf27f3045e6b939"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "е916еах50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "е916еах50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o1263573357717097435"
+    },
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241be7b0cf27f3045e6b93c"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "е140ах50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "е140ах50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o433953336215617824"
+    },
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241c01c0cf27f3045e6b93f"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "е219ах50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "е219ах50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o602823400608177503"
+    },
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241c0380cf27f3045e6b942"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "blocked": false,
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "е091ах50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "е091ах50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o3308312517575202681"
+    },
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241c0540cf27f3045e6b945"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "е734ах50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "е734ах50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o3254293393386804630"
+    },
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241c0690cf27f3045e6b948"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "е123ах50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "е123ах50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o3439179039349036975"
+    },
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241c0920cf27f3045e6b94b"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "е112ах50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "е112ах50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o1250109402769888533"
+    },
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241c0bb0cf27f3045e6b951"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "е145ах50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "е145ах50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o3561867402665313515"
+    },
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241c0d00cf27f3045e6b954"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "е217ах50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "е217ах50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o2715173526670318020"
+    },
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241c0e30cf27f3045e6b957"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "е735ах50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "е735ах50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o669221619608807459"
+    },
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241c0a70cf27f3045e6b94e"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "е089ах50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "е089ах50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o948019710797165603"
+    },
+    {
+        "VIN": "",
+        "_id": {
+            "$oid": "5241c0f80cf27f3045e6b95a"
+        },
+        "account": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "comment": "",
+        "fuelPumpLock": false,
+        "gosnumber": "т413во50",
+        "ignitionLock": false,
+        "marka": "",
+        "model": "",
+        "name": "т413во50",
+        "objnote": "",
+        "settings": {
+            "name": "car_rot_bbc_32.png",
+            "src": "images/cars/car_rot_bbc_32.png",
+            "size": "32"
+        },
+        "subscriptionfee": "",
+        "type": "Автомобиль",
+        "uid": "o2875232062468230992"
+    }
+]

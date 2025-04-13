@@ -1,0 +1,27 @@
+packreceiver.regeocoding.nominatimServer=http\://localhost:80/nominatim/reverse.php
+packreceiver.regeocoding.enabled=true
+packreceiver.wialon.port=9087
+packreceiver.teltonika.port=9088
+packreceiver.ruptela.port=9089
+packreceiver.ruptela.configpath=${WAYRECALL_HOME}/ruptelacfg
+packreceiver.gosafe.port=9086
+packreceiver.navtelecomf6.port = 9085
+packreceiver.skysim.port = 9084
+packreceiver.autophonemayak.port = 9083
+packreceiver.dtm.port = 9082
+packreceiver.arnavi.port = 9100
+packreceiver.regeocoder=directNominatimRegeocoder
+packreceiver.regeocoder.parallel=6
+packreceiver.regeocoder.cachePrecision = 0.0005
+packreceiver.regeocoder.waitinterval=5
+
+packreceiver.nominatim.url=jdbc:postgresql://{{ nominatim_instance[0].internal_ip }}/nominatim
+packreceiver.nominatim.user={{ nominatim_instance[0].nominatim_user }}
+packreceiver.nominatim.password={{ nominatim_instance[0].nominatim_password }}
+packreceiver.nominatim.maxActive=4
+
+packreceiver.buffersize = 400000
+packreceiver.sameUidSize = 1000
+packreceiver.transferQps = 300
+packreceiver.transferfsync = true
+packreceiver.sustainwindowmills = 8000

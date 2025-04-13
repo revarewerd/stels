@@ -1,0 +1,223 @@
+<configuration debug="true" scan="true" scanPeriod="10 seconds" >
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+     ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>true</immediateFlush>
+        </encoder>
+    </appender>
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
+    <appender name="DEEGREE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${WAYRECALL_HOME}/logs/monitoring/degree-${bySecond}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${WAYRECALL_HOME}/logs/monitoring/deegree-${bySecond}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>false</immediateFlush>
+        </encoder>
+    </appender>
+
+    <appender name="NOTIFICATIONS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${WAYRECALL_HOME}/logs/monitoring/notifications-${bySecond}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${WAYRECALL_HOME}/logs/monitoring/notifications-${bySecond}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>15</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>false</immediateFlush>
+        </encoder>
+    </appender>
+
+    <appender name="SESSIONS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${WAYRECALL_HOME}/logs/monitoring/sessions-${bySecond}.log</file>
+
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">-->
+            <!--<fileNamePattern>${WAYRECALL_HOME}/logs/monitoring/sessins-${bySecond}.%i.log.zip</fileNamePattern>-->
+            <!--<minIndex>1</minIndex>-->
+            <!--<maxIndex>15</maxIndex>-->
+        <!--</rollingPolicy>-->
+
+        <!--<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">-->
+            <!--<maxFileSize>10MB</maxFileSize>-->
+        <!--</triggeringPolicy>-->
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>packreceiver-logs/sessions-${bySecond}.%d{yyyy-MM-dd_HH_mm}.log.gz</fileNamePattern>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>false</immediateFlush>
+        </encoder>
+    </appender>
+
+    <appender name="NOTIFICATIONS_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="NOTIFICATIONS_FILE"/>
+    </appender>
+
+    <appender name="ATMOS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${WAYRECALL_HOME}/logs/monitoring/atmos-${bySecond}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${WAYRECALL_HOME}/logs/monitoring/atmos-${bySecond}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>false</immediateFlush>
+        </encoder>
+    </appender>
+
+    <appender name="OUT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${WAYRECALL_HOME}/logs/monitoring/main-${bySecond}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${WAYRECALL_HOME}/logs/monitoring/main-${bySecond}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>15</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>true</immediateFlush>
+        </encoder>
+    </appender>
+
+    <appender name="CLIENT_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${WAYRECALL_HOME}/logs/monitoring/client-${bySecond}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${WAYRECALL_HOME}/logs/monitoring/client-${bySecond}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>15</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <immediateFlush>true</immediateFlush>
+        </encoder>
+    </appender>
+
+    <logger name="ru.sosgps" level="debug"/>
+
+    <!--<logger name="ru.sosgps.wayrecall.monitoring.security" level="trace"/>-->
+
+    <!--<logger name="ru.sosgps.wayrecall.monitoring.web.PositionService" level="trace"/>-->
+
+    <logger name="ru.sosgps.wayrecall.data.CachedPackageStore" level="info"/>
+    <logger name="ru.sosgps.wayrecall.monitoring.notifications.rules.MaintenanceCriteria" level="info"/>
+
+    <logger name="ru.sosgps.wayrecall.data.PerObjectMongoPackStore" level="info"/>
+
+    <!--<logger name="ru.sosgps.wayrecall.monitoring.deegree.DeegreeServlet" level="trace"/>-->
+
+    <!--<logger name="ru.sosgps.wayrecall.monitoring.deegree.PathReportWMSStore" level="trace"/>-->
+
+    <!--<logger name="org.springframework" level="debug"/>-->
+
+    <logger name="ru.sosgps.wayrecall.monitoring.deegree.DeegreeServlet" level="trace" additivity="false">
+        <appender-ref ref="DEEGREE_FILE"/>
+    </logger>
+
+    <!--<logger name="ru.sosgps.wayrecall.m2msms.M2mSmsGate" level="trace"/>-->
+
+    <logger name="ru.sosgps.wayrecall.data.sleepers.SleepersDataStore" level="info"/>
+
+
+    <logger name="org.reflections.Reflections" level="warn" additivity="false">
+        <appender-ref ref="DEEGREE_FILE"/>
+    </logger>
+
+    <logger name="org.deegree" level="warn" additivity="false">
+        <appender-ref ref="DEEGREE_FILE"/>
+    </logger>
+
+    <logger name="ru.sosgps.wayrecall.monitoring.notifications.NotificationDetector" level="debug" additivity="false">
+        <appender-ref ref="NOTIFICATIONS_ASYNC"/>
+    </logger>
+
+    <!--<logger name="ru.sosgps.wayrecall.monitoring.web.NotificationRules" level="debug" additivity="false">-->
+    <!--<appender-ref ref="NOTIFICATIONS_ASYNC"/>-->
+    <!--</logger>-->
+
+    <logger name="ru.sosgps.wayrecall.monitoring.web.GeozonesData" level="debug" additivity="false">
+        <appender-ref ref="NOTIFICATIONS_ASYNC"/>
+    </logger>
+
+    <logger name="ru.sosgps.wayrecall.monitoring.geozones.GeozonesStore" level="debug" additivity="false">
+        <appender-ref ref="NOTIFICATIONS_ASYNC"/>
+    </logger>
+
+    <!--<logger name="ru.sosgps.wayrecall.billing.RuptelaListener" level="debug"  additivity="false">-->
+    <!--<appender-ref ref="ATMOS_FILE"/>-->
+    <!--</logger>-->
+
+    <logger name="ru.sosgps.wayrecall.billing.GPSAndSMSAtmospherePublisher" level="debug" additivity="false">
+        <appender-ref ref="ATMOS_FILE"/>
+    </logger>
+
+    <logger name="ru.sosgps.wayrecall.billing.MyAtmosphereMeteorServlet" level="debug" additivity="false">
+        <appender-ref ref="ATMOS_FILE"/>
+    </logger>
+
+    <logger name="org.atmosphere" level="trace" additivity="false">
+        <appender-ref ref="ATMOS_FILE"/>
+    </logger>
+
+    <logger name="org.eclipse.jetty.server.session" level="debug" additivity="false">
+        <appender-ref ref="SESSIONS_FILE"/>
+    </logger>
+
+    <logger name="ru.sosgps.wayrecall.initialization.WayrecallMongoSessionManager" level="debug" additivity="false">
+        <appender-ref ref="SESSIONS_FILE"/>
+    </logger>
+
+    <logger name="org.springframework.security.web.session" level="debug" additivity="false">
+        <appender-ref ref="SESSIONS_FILE"/>
+    </logger>
+
+    <logger name="ru.sosgps.wayrecall.monitoring.web.ErrorReporter" level="debug" additivity="false">
+        <appender-ref ref="CLIENT_LOG"/>
+    </logger>
+
+    <!--<logger name="ru.sosgps.wayrecall.monitoring.security.SessionListener" level="debug" additivity="false">-->
+    <!--<appender-ref ref="SESSIONS_FILE"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="org.eclipse.jetty" level="debug"/>-->
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="OUT_FILE"/>
+    </root>
+</configuration>

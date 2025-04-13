@@ -1,0 +1,22 @@
+---
+- name: Install WireGuard Server and generate keys
+  hosts: vpn
+  become: true
+  vars:
+    wireguard_postup:
+      - iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+      - iptables -A FORWARD -i %i -j ACCEPT
+      - iptables -A FORWARD -o %i -j ACCEPT 
+    wireguard_predown:
+      - iptables -t nat -D POSTROUTING -o eth1 -j MASQUERADE
+      - iptables -D FORWARD -i %i -j ACCEPT
+      - iptables -D FORWARD -o %i -j ACCEPT
+    wireguard_preup:
+      - echo 1 > /proc/sys/net/ipv4/ip_forward
+      - ufw allow 51820/udp
+  roles:
+    # ansible-galaxy install githubixx.ansible_role_wireguard
+    - githubixx.ansible_role_wireguard
+
+
+

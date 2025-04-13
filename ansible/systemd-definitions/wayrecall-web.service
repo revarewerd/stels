@@ -1,0 +1,23 @@
+[Unit]
+Description=Wayrecall server
+PartOf=wayrecall.service
+After=wayrecall.service
+
+[Service]
+EnvironmentFile=/etc/environment
+WorkingDirectory=/opt/wayrecall
+ExecStart=/usr/bin/java -server -XX:PermSize=128M -XX:MaxPermSize=384M -XX:NewSize=2048m -XX:MaxNewSize=2048m \
+            -XX:SurvivorRatio=2 -XX:MaxTenuringThreshold=4 -XX:TargetSurvivorRatio=70 -Xms4096m -Xmx8192m \
+            -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=70 \
+            -XX:+UseCMSInitiatingOccupancyOnly -XX:+AlwaysPreTouch \
+            -Xloggc:gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintHeapAtGC -XX:+PrintGCTaskTimeStamps \
+            -XX:+PrintGCApplicationStoppedTime -XX:+PrintPromotionFailure -XX:+PrintGCDateStamps -XX:+PrintTenuringDistribution -XX:+PrintAdaptiveSizePolicy \
+             -Dlog4j2.formatMsgNoLookups=true \
+             -Dlogback.configurationFile=${WAYRECALL_HOME}/conf/monitoring-logback.xml -jar ${WAYRECALL_HOME}/bin/monitoring.jar 9080
+User=wayrecall
+Type=simple
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=wayrecall.service

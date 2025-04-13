@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+       ">
+
+    <context:annotation-config/>
+
+    <import resource="regeocoding.xml"/>
+
+    <bean id="multiJmsEventBusTerminal" class="ru.sosgps.wayrecall.packreceiver.MultiJMSTopicsTerminal"/>
+
+    <jms:listener-container
+            container-type="default"
+            destination-type="topic"
+            connection-factory="cachedConnectionFactory"
+            acknowledge="auto">
+        <jms:listener destination="receiver.networkcommand.navtelecom" ref="deviceCommandJMSListener"
+                      method="receiveCommand"/>
+        <!--<jms:listener destination="#{'${instance.name}'+'.receiver.newmessage'}" ref="newGpsEventMapper"/>-->
+    </jms:listener-container>
+
+    <bean id="eventBus" class="org.axonframework.eventhandling.ClusteringEventBus" primary="true">
+        <constructor-arg index="0">
+            <bean class="org.axonframework.eventhandling.DefaultClusterSelector">
+                <constructor-arg index="0" ref="defaultCluster"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg index="1" ref="multiJmsEventBusTerminal"/>
+    </bean>
+
+    <axon:cluster id="defaultCluster" default="true">
+        <bean class="org.axonframework.eventhandling.SimpleCluster">
+            <constructor-arg index="0" value="defaultCluster"/>
+            <constructor-arg index="1">
+                <bean class="org.axonframework.eventhandling.SpringAnnotationOrderResolver"/>
+            </constructor-arg>
+        </bean>
+    </axon:cluster>
+
+    <bean id="packProcessor" class="ru.sosgps.wayrecall.packreceiver.PackProcessor">
+        <property name="listeners">
+            <array>
+                <bean class="ru.sosgps.wayrecall.packreceiver.SensorNamesAggregator"/>
+            </array>
+        </property>
+        <property name="preprocessors">
+            <array>
+                <!--<bean class="ru.sosgps.wayrecall.packreceiver.IncomingGPSLogger"></bean>-->
+                <bean class="ru.sosgps.wayrecall.processing.LazySeqAccumilatedParamsProcessor"/>
+            </array>
+        </property>
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.retranslators.MultiRetranslatorConfigurator">
+        <property name="packConv" ref="packConverter"/>
+    </bean>
+
+    <bean id="regeocoderTask" class="ru.sosgps.wayrecall.regeocoding.ReGeocoderRunner"
+          init-method="processTrulyInfinitely">
+        <property name="regeocoder" ref="${packreceiver.regeocoder}"/>
+        <property name="waitInterval" value="${packreceiver.regeocoder.waitinterval:30}"/>
+    </bean>
+
+
+    <bean id="defaultThreadPool" class="java.util.concurrent.Executors"
+          factory-method="newCachedThreadPool"/>
+
+    <bean id="workerThreadPool" class="java.util.concurrent.Executors"
+          factory-method="newCachedThreadPool"/>
+
+    <bean id="bossEventLoopGroup" class="io.netty.channel.nio.NioEventLoopGroup"/>
+    <alias name="bossEventLoopGroup" alias="workerEventLoopGroup"/>
+
+    <bean id="hashedWheelTimer" class="org.jboss.netty.util.HashedWheelTimer"/>
+
+    <bean id="packReceiver" class="ru.sosgps.wayrecall.packreceiver.netty.WialonNettyServer">
+        <property name="port" value="${packreceiver.wialon.port}"/>
+        <!--<property name="port" value="-1"/>-->
+        <property name="daemon" value="false"/>
+
+        <!--<property name="workerCount" value="15"/>-->
+    </bean>
+
+    <bean id="teltonikaReceiver" class="ru.sosgps.wayrecall.packreceiver.netty.TeltonikaNettyServer">
+        <property name="port" value="${packreceiver.teltonika.port}"/>
+        <property name="daemon" value="false"/>
+        <!--<property name="soTimeout" value="300000"/>-->
+    </bean>
+
+    <!--<bean id="ruptelaReceiver" class="ru.sosgps.wayrecall.packreceiver.blocking.RuptelaPackReceiver">-->
+    <!--<constructor-arg value="${packreceiver.ruptela.port}"/>-->
+    <!--<property name="store">-->
+    <!--<bean class="ru.sosgps.wayrecall.avlprotocols.ruptela.RuptelaPackProcessor">-->
+    <!--<constructor-arg ref="packProcessor"/>-->
+    <!--<property name="configsPath" value="${packreceiver.ruptela.configpath}" />-->
+    <!--</bean>-->
+    <!--</property>-->
+    <!--<property name="daemon" value="false"/>-->
+    <!--<property name="soTimeout" value="3000000"/>-->
+    <!--</bean>-->
+
+    <bean id="execctxt" class="ru.sosgps.wayrecall.utils.concurrent.ScalaExecutorService"
+          factory-method="implicitSameThreadContext"></bean>
+
+    <bean id="ruptelaReceiver" class="ru.sosgps.wayrecall.packreceiver.netty.RuptelaNettyServer">
+        <property name="port" value="${packreceiver.ruptela.port}"/>
+        <property name="ruptelaStore">
+            <bean class="ru.sosgps.wayrecall.avlprotocols.ruptela.RuptelaPackProcessor">
+                <constructor-arg ref="packProcessor"/>
+                <constructor-arg ref="execctxt"/>
+                <property name="configsPath" value="${packreceiver.ruptela.configpath}"/>
+                <property name="statelistener">
+                    <bean class="ru.sosgps.wayrecall.avlprotocols.ruptela.RuptelaStatePublisher"/>
+                </property>
+            </bean>
+        </property>
+        <property name="daemon" value="false"/>
+    </bean>
+
+    <bean id="deviceCommandJMSListener" class="ru.sosgps.wayrecall.packreceiver.DeviceCommandJMSListener"/>
+
+    <bean id="navTelecomCommander" class="ru.sosgps.wayrecall.avlprotocols.navtelecom.NavTelecomCommander"/>
+
+    <bean id="navtelReceiver" class="ru.sosgps.wayrecall.packreceiver.netty.NavTelecomNettyServer">
+        <property name="port" value="${packreceiver.navtelecomf6.port}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="mayakReceiver" class="ru.sosgps.wayrecall.packreceiver.netty.AutophoneMayakServer">
+        <property name="port" value="${packreceiver.autophonemayak.port}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="dtmReceiver" class="ru.sosgps.wayrecall.packreceiver.netty.DTMServer">
+        <property name="port" value="${packreceiver.dtm.port}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="gosafeReceiver" class="ru.sosgps.wayrecall.packreceiver.netty.GosafeNettyServer">
+        <property name="port" value="${packreceiver.gosafe.port}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="skysimReceiver" class="ru.sosgps.wayrecall.packreceiver.netty.SkysimNettyServer">
+        <property name="port" value="${packreceiver.skysim.port}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="skyPatrolNettyServer" class="ru.sosgps.wayrecall.packreceiver.netty.SkyPatrolNettyServer">
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="bsonGPSPackReceiver" class="ru.sosgps.wayrecall.packreceiver.blocking.BsonGPSPackReceiver">
+        <constructor-arg type="int" value="${packreceiver.bsongps.port:4511}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="microMayac" class="ru.sosgps.wayrecall.packreceiver.netty.MicroMayakServer">
+        <property name="port" value="${packreceiver.micromayac.port:9090}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="arnavi" class="ru.sosgps.wayrecall.packreceiver.netty.ArnaviServer">
+        <property name="port" value="${packreceiver.arnavi.port:9091}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="gtlt3mt1" class="ru.sosgps.wayrecall.packreceiver.netty.GTLT3MT1Server">
+        <property name="port" value="${packreceiver.gtlt3mt1.port:9093}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="tk102Server" class="ru.sosgps.wayrecall.packreceiver.netty.TK102Server">
+        <property name="port" value="${packreceiver.tk102Server.port:9092}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="tk103Server" class="ru.sosgps.wayrecall.packreceiver.netty.TK103Server">
+        <property name="port" value="${packreceiver.tk103Server.port:9095}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="gl06Server" class="ru.sosgps.wayrecall.packreceiver.netty.GL06Server">
+        <property name="port" value="${packreceiver.gl06Server.port:9094}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="adm1_07Server" class="ru.sosgps.wayrecall.packreceiver.netty.ADM1_07Server">
+        <property name="port" value="${packreceiver.adm1_07Server.port:9096}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="galileoskyServer" class="ru.sosgps.wayrecall.packreceiver.netty.GalileoskyServer">
+        <property name="port" value="${packreceiver.galileosky.port:9097}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="zudoMayac" class="ru.sosgps.wayrecall.packreceiver.netty.ZudoServer">
+        <property name="port" value="${packreceiver.zudo.port:1081}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="wialonIPS2Server" class="ru.sosgps.wayrecall.packreceiver.netty.WialonIPS2Server">
+        <property name="port" value="${packreceiver.wialonips2.port:20332}"/>
+        <property name="store" ref="packProcessor"/>
+    </bean>
+
+    <bean id="lbsConverter" class="ru.sosgps.wayrecall.data.sleepers.MongoStoredLBSConverter">
+        <property name="innerConverter">
+            <bean class="ru.sosgps.wayrecall.data.sleepers.LBSHttp">
+                <property name="method" value="${global.lbs.method:ultrastar}"/>
+            </bean>
+        </property>
+        <property name="mdbm" value="#{multiDbManager.mainDBManager}"/>
+    </bean>
+    <!--<bean id="gosafeReceiver" class="ru.sosgps.wayrecall.packreceiver.blocking.GosafePackReceiver">-->
+    <!--<constructor-arg value="${packreceiver.gosafe.port}"/>-->
+    <!--<property name="daemon" value="false"/>-->
+    <!--<property name="soTimeout" value="3000000"/>-->
+    <!--</bean>-->
+
+
+    <bean id="broker" class="org.apache.activemq.xbean.BrokerFactoryBean">
+        <property name="config" value="classpath:activemq.xml"/>
+        <property name="start" value="true"/>
+    </bean>
+
+    <!-- A connection to ActiveMQ -->
+
+    <bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory" depends-on="broker"
+          autowire-candidate="false">
+        <property name="brokerURL" value="${global.amqBrokerURL}"/>
+        <property name="useAsyncSend" value="true"/>
+    </bean>
+
+    <!-- A cached connection to wrap the ActiveMQ connection -->
+    <bean id="cachedConnectionFactory"
+          class="org.springframework.jms.connection.CachingConnectionFactory">
+        <property name="targetConnectionFactory" ref="amqConnectionFactory"/>
+    </bean>
+
+
+    <!-- A JmsTemplate instance that uses the cached connection and destination -->
+
+    <bean id="producerTemplate"
+          class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="cachedConnectionFactory"/>
+        <!--<property name="defaultDestination" ref="destination"/>-->
+        <property name="pubSubDomain" value="true"/>
+        <property name="explicitQosEnabled" value="true"/>
+        <property name="deliveryPersistent" value="false"/>
+        <!--<property name="explicitQosEnabled" value="true"/>-->
+        <!--<property name="deliveryMode">-->
+        <!--<util:constant static-field="javax.jms.DeliveryMode.NON_PERSISTENT"/>-->
+        <!--</property>-->
+    </bean>
+
+    <bean id="mailSender" class="ru.sosgps.wayrecall.utils.MailSender">
+        <property name="email" value="${global.sysemail}"/>
+        <property name="host" value="${global.sysemail.smtphost}"/>
+        <property name="login" value="${global.sysemail.login}"/>
+        <property name="password" value="${global.sysemail.password}"/>
+        <property name="allowedAddress" value="${global.sysemail.allowedto:}"/>
+    </bean>
+
+    <bean id="jettyServer" class="ru.sosgps.wayrecall.m2msms.httpreceiver.JettyServer" init-method="startServer">
+    </bean>
+
+
+    <bean id="packetsWriter" class="ru.sosgps.wayrecall.packreceiver.DbMappingPacketsWriter"/>
+    <bean id="packetsReader" class="ru.sosgps.wayrecall.packreceiver.DbMappingPacketsReader"/>
+
+    <bean id="packConverter" class="ru.sosgps.wayrecall.data.MapProtocolPackConverter"/>
+
+    <bean id="annotationEventListenerBeanPostProcessor"
+          class="org.axonframework.eventhandling.annotation.AnnotationEventListenerBeanPostProcessor"/>
+
+    <bean id="multiDbManager" class="ru.sosgps.wayrecall.initialization.MultiDbManager">
+        <property name="config" ref="multiserverConfig"/>
+    </bean>
+
+    <bean id="multiserverConfig" class="ru.sosgps.wayrecall.initialization.MultiserverConfig">
+        <constructor-arg index="0" value="file:///${WAYRECALL_HOME}/conf"/>
+    </bean>
+
+    <bean class="java.util.Timer"/>
+
+    <!--<bean id="roleChecker" class="ru.sosgps.wayrecall.packreceiver.RoleChecker"/>-->
+</beans>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       ">
+
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${WAYRECALL_HOME}/conf/global.properties</value>
+                <value>file:${WAYRECALL_HOME}/conf/packreceiver.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--<context:component-scan base-package="ru.sosgps.wayrecall.m2msms"/>-->
+    <!--<context:annotation-config/>-->
+
+    <bean id="mongoDBManager" class="ru.sosgps.wayrecall.core.MongoDBManager" primary="true">
+        <property name="databaseName" value="Seniel-sms"/>
+        <property name="host" value="${global.defaultmongodb.host}"/>
+        <property name="port" value="${global.defaultmongodb.port}"/>
+    </bean>
+
+    <bean id="originalmongoDBManager" class="ru.sosgps.wayrecall.core.MongoDBManager" autowire-candidate="false">
+        <property name="databaseName" value="Seniel-dev2"/>
+        <property name="host" value="${global.defaultmongodb.host}"/>
+        <property name="port" value="${global.defaultmongodb.port}"/>
+    </bean>
+
+    <bean id="sendSms" class="ru.sosgps.wayrecall.m2msms.SendSms" lazy-init="true">
+        <property name="port" ref="port" />
+    </bean>
+
+    <bean id="portFactory" class="ru.sosgps.wayrecall.m2msms.M2MClientFactory"/>
+
+    <bean id="port" factory-bean="portFactory" factory-method="createPort" lazy-init="true"/>
+
+
+</beans>

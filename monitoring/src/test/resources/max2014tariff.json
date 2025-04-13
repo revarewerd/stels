@@ -1,0 +1,45 @@
+[
+    {
+        "_id": {
+            "$oid": "519cced8e4b0f612af8536bc"
+        },
+        "name": "Дилерский 100 р.",
+        "comment": "",
+        "abonentPrice": [
+            {
+                "name": "Основной абонентский терминал",
+                "cost": "100",
+                "comment": ""
+            },
+            {
+                "name": "Дополнительный абонетский терминал",
+                "cost": "50",
+                "comment": ""
+            },
+            {
+                "name": "Спящий блок автономного типа GSM",
+                "cost": "50",
+                "comment": ""
+            },
+            {
+                "name": "Спящий блок на постоянном питании типа Впайка",
+                "cost": "10",
+                "comment": ""
+            },
+            {
+                "name": "Радиозакладка",
+                "cost": "50",
+                "comment": ""
+            }
+        ],
+        "additionalAbonentPrice": [
+            {
+                "name": "Услуга1",
+                "cost": "120",
+                "comment": ""
+            }
+        ],
+        "servicePrice": [],
+        "hardwarePrice": []
+    }
+]

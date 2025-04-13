@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+          http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd">
+
+    <import resource="security-app-context.xml"/>
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${WAYRECALL_HOME}/conf/global.properties</value>
+            </list>
+        </property>
+    </bean>
+
+     <import resource="classpath:billing-config.xml"/>
+
+
+    <task:scheduled-tasks scheduler="myScheduler">
+        <task:scheduled ref="feeProcessor" method="dailySubtractWithDetails" cron="0 0 5 * * *"/>
+        <task:scheduled ref="dealersTariffPlans" method="doDailyPayForAll" cron="0 0 6 * * *"/>
+        <!--<task:scheduled ref="feeProcessor" method="dailySubtract" cron="0/3 * * * * *"/>-->
+    </task:scheduled-tasks>
+
+    <task:scheduler id="myScheduler" pool-size="10"/>
+
+
+    <bean id="objectsPermissionsChecker" class="ru.sosgps.wayrecall.security.AllPermissivePermissionsChecker" />
+
+    <!--<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">-->
+        <!--<property name="beans">-->
+            <!--<map>-->
+                <!--<entry key="bean:name=objectsRepository" value-ref="objectsRepository"/>-->
+            <!--</map>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!-- A JmsTemplate instance that uses the cached connection and destination -->
+
+    <!--<bean id="newGpsEventMapper" class="ru.sosgps.wayrecall.data.NewGpsEventMapper" />-->
+
+    <bean id="sleepersDataStore" class="ru.sosgps.wayrecall.data.sleepers.SleepersDataStore" />
+
+    <bean id="ruptelaListener" class="ru.sosgps.wayrecall.billing.RuptelaListener" />
+
+    <bean id="timer" class="java.util.Timer" />
+
+
+    <!-- The Spring message listener container configuration -->
+    <jms:listener-container
+            container-type="default"
+            destination-type="topic"
+            connection-factory="connectionFactory"
+            acknowledge="auto">
+        <!--<jms:listener destination="receiver.newmessage" ref="newGpsEventMapper"/>-->
+        <jms:listener destination="packreceiver.ruptela" ref="ruptelaListener"/>
+        <jms:listener destination="#{'${instance.name}'+'.externalCommand'}" ref="clientSmsPaysProcessor"/>
+        <!--<jms:listener destination="eventbus.event" ref="eventMapper"/>-->
+    </jms:listener-container>
+
+    <bean id="clientSmsPaysProcessor" class="ru.sosgps.wayrecall.billing.dealer.ClientSmsPaysProcessor" />
+
+</beans>

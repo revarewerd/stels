@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans.xsd
+                    http://www.springframework.org/schema/security
+                    http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <sec:http auto-config="false" use-expressions="true" entry-point-ref="authenticationEntryPoint"
+              access-decision-manager-ref="nonPrefixedADM">
+        <sec:remember-me key="avoaSBOhMnOJLuh3Gf0IzJ9DTfDp0qVA" services-ref="rememberMeServices"/>
+        <sec:request-cache ref="httpSessionRequestCache" />
+        <sec:custom-filter ref="backdoorAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
+        <sec:custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
+        <sec:intercept-url pattern="/extjs-4.2.1/**" access="permitAll"/>
+        <sec:intercept-url pattern="/EDS/banned" access="permitAll"/>
+        <sec:intercept-url pattern="/login.js" access="permitAll"/>
+        <sec:intercept-url pattern="/login.html" access="permitAll"/>
+        <!--<sec:intercept-url pattern="/**" access="hasRole('admin')"/>-->
+        <sec:intercept-url pattern="/**" access="hasAnyRole('admin','superuser')"/>
+        <sec:logout/>
+        <sec:csrf disabled="true" />
+        <sec:headers>
+            <sec:frame-options policy="SAMEORIGIN" />
+            <sec:hsts disabled="true"/>
+        </sec:headers>
+    </sec:http>
+
+    <bean id="httpSessionRequestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache">
+        <property name="createSessionAllowed" value="false"/>
+    </bean>
+
+
+    <bean id="nonPrefixedADM" class="org.springframework.security.access.vote.AffirmativeBased">
+        <constructor-arg>
+            <array>
+                <bean class="org.springframework.security.web.access.expression.WebExpressionVoter">
+                    <property name="expressionHandler">
+                        <bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+                            <property name="defaultRolePrefix" value=""/>
+                        </bean>
+                    </property>
+                </bean>
+            </array>
+        </constructor-arg>
+    </bean>
+
+
+    <!--<bean id="authenticationEntryPoint"-->
+    <!--class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">-->
+    <!--<property name="realmName" value="Billing Realm"/>-->
+    <!--</bean>-->
+
+    <bean id="authenticationEntryPoint"
+          class="ru.sosgps.wayrecall.security.AjaxAwareLoginUrlAuthenticationEntryPoint">
+        <constructor-arg value="/login.html"/>
+    </bean>
+
+    <bean id="authenticationFilter"
+          class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="filterProcessesUrl" value="/j_spring_security_check"/>
+        <!--<property name="rememberMeServices" ref="rememberMeServices"/>-->
+        <property name="authenticationSuccessHandler">
+            <bean class="ru.sosgps.wayrecall.security.AjaxAuthenticationSuccessHandler"></bean>
+        </property>
+        <property name="authenticationFailureHandler">
+            <bean class="ru.sosgps.wayrecall.security.AjaxAuthenticationFailureHandler"></bean>
+        </property>
+    </bean>
+
+    <bean id="rememberMeServices"
+          class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+        <constructor-arg value="avoaSBOhMnOJLuh3Gf0IzJ9DTfDp0qVA"/>
+        <constructor-arg ref="billingUserDetailsService"/>
+    </bean>
+
+    <bean id="daoAuthenticationProvider"
+          class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService">
+            <bean class="org.springframework.security.provisioning.InMemoryUserDetailsManager">
+                <constructor-arg index="0">
+                    <util:properties id="myProps"
+                                     location="file:#{'${WAYRECALL_HOME}/conf/wrcinstances/'+'${instance.name}'+'/billingAdmins.properties'}"/>
+                </constructor-arg>
+            </bean>
+        </property>
+        <property name="preAuthenticationChecks" ref="tc"/>
+    </bean>
+
+
+    <bean id="billingAuthenticationProvider" class="ru.sosgps.wayrecall.billing.security.BillingAuthenticationProvider">
+        <property name="postAuthenticationChecks" ref="blockedUserChecker"/>
+        <property name="preAuthenticationChecks" ref="tc"/>
+    </bean>
+    <bean id="blockedUserChecker" class="ru.sosgps.wayrecall.security.BlockedUserChecker"/>
+
+
+    <bean id="authenticationFailureListener"
+          class="ru.sosgps.wayrecall.monitoring.security.AuthenticationFailureListener"/>
+    <bean id="authenticationSuccessEventListener"
+          class="ru.sosgps.wayrecall.monitoring.security.AuthenticationSuccessEventListener"/>
+    <bean id="loginAttemptService" class="ru.sosgps.wayrecall.monitoring.security.LoginAttemptService"/>
+    <bean id="tc" class="ru.sosgps.wayrecall.monitoring.security.BruteforceChecker"/>
+
+
+    <bean id="backdoorAuthenticationFilter"
+          class="ru.sosgps.wayrecall.monitoring.security.BackdoorAuthenticationFilter">
+        <property name="authoritiesString"
+                  value="ROLE_USER,ROLE_ADMIN,ROLE_TARIFFER,admin,AccountView,AccountCreate,AccountDataSet,AccountDelete,ObjectView,ObjectCreate,ObjectDataSet,ObjectDelete,EquipmentView,EquipmentCreate,EquipmentDataSet,EquipmentDelete,UserView,UserCreate,UserDelete,UserDataSet,EquipmentTypesView,EquipmentTypesCreate,EquipmentTypesDataSet,EquipmentTypesDelete,TariffPlanView,TariffPlanCreate,TariffPlanDataSet,TariffPlanDelete,ChangePermissions,ChangeRoles,ChangeBalance,ObjectRemove,EquipmentRemove,ObjectRestore,EquipmentRestore"/>
+    </bean>
+    <bean id="backdoorAuthenticationProvider"
+          class="ru.sosgps.wayrecall.monitoring.security.BackdoorAuthenticationProvider"/>
+
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider ref="daoAuthenticationProvider">
+        </sec:authentication-provider>
+        <sec:authentication-provider ref="billingAuthenticationProvider">
+        </sec:authentication-provider>
+        <sec:authentication-provider ref="backdoorAuthenticationProvider"/>
+    </sec:authentication-manager>
+</beans>

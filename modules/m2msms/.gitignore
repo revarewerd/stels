@@ -1,0 +1,5 @@
+.idea/*
+target/*
+${env.WAYRECALL_HOME}/*
+
+*.iml

@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+nohup java -server -Djava.rmi.server.hostname=localhost -Dcom.sun.management.jmxremote.port=6643 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -jar $WAYRECALL_HOME/repo/monitoring/target/dist/monitoring.jar 5193 > /dev/null 2>&1 & echo $! > monitoring.pid

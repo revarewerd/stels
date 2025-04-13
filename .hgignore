@@ -1,0 +1,29 @@
+syntax: glob
+target/*
+core/stfrerr.log
+core/stfrout.log
+packreceiver-logs/*
+logs/*
+.hgignore
+billing/overlays/*
+*/Thumbs.db
+osmTilesCache/**
+staticImgTempStore/**
+monitoring/sessionLog/ses-127.0.0.1-*.gz
+monitoring/sessionLog/ses-127.0.0.1-*.txt
+inclog/**
+bin/**
+conf/goodfinance/vhosts
+conf/goodfinance/instance.properties
+conf/goodfinance/billingAdmins.properties
+
+.idea/*
+.idea/compiler.xml
+.idea/scala_compiler.xml
+*.iml
+integrationtests/integrationtests.iml
+testutils/testutils.iml
+
+tools-logs/**
+syntax: regexp
+sessionLog/*

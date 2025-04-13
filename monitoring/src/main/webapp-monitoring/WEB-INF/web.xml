@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+        >
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/applicationContext.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    <!--<listener>-->
+        <!--<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>-->
+    <!--</listener>-->
+    <listener>
+        <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>default</servlet-name>
+        <init-param>
+            <param-name>useFileMappedBuffer</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>ThirdPartyJSLibs</servlet-name>
+        <servlet-class>ru.sosgps.wayrecall.utils.web.ThirdPartyJSLibs</servlet-class>
+        <!--<init-param>-->
+            <!--<param-name>folderPath</param-name>-->
+            <!--<param-value>C:\Users\nickl-new\Documents\forStels\ThirdPartyJS</param-value>-->
+        <!--</init-param>-->
+    </servlet>
+    <servlet>
+        <servlet-name>PathDataServlet</servlet-name>
+        <servlet-class>ru.sosgps.wayrecall.monitoring.web.PathDataServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RotateServlet</servlet-name>
+        <servlet-class>ru.sosgps.wayrecall.monitoring.web.RotateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ThirdPartyJSLibs</servlet-name>
+        <url-pattern>/moment/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ThirdPartyJSLibs</servlet-name>
+        <url-pattern>/extjs-4.2.1/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ThirdPartyJSLibs</servlet-name>
+        <url-pattern>/openlayers/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PathDataServlet</servlet-name>
+        <url-pattern>/pathdata</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RotateServlet</servlet-name>
+        <url-pattern>/rotate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>index</servlet-name>
+        <url-pattern>/index.html</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>index</servlet-name>
+        <servlet-class>ru.sosgps.wayrecall.monitoring.web.MainPageTemplateServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>DeegreeService</servlet-name>
+        <servlet-class>ru.sosgps.wayrecall.monitoring.deegree.DeegreeServletSingleton</servlet-class>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeegreeService</servlet-name>
+        <url-pattern>/serv</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>extdirectspring-controller</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>10</load-on-startup>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/EDS-controller-config.xml</param-value>
+        </init-param>
+        <multipart-config />
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>extdirectspring-controller</servlet-name>
+        <url-pattern>/EDS/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>webapi-controller</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>10</load-on-startup>
+        <init-param>
+            <param-name>contextClass</param-name>
+            <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+        </init-param>
+        <init-param>
+            <param-name>contextInitializerClasses</param-name>
+            <param-value>ru.sosgps.wayrecall.web.api.WebApiInit</param-value>
+        </init-param>
+        <multipart-config />
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>webapi-controller</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>UnCachingFilter</filter-name>
+        <filter-class>ru.sosgps.wayrecall.security.UnCachingFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>UnCachingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>SpeedFilter</filter-name>
+        <filter-class>ru.sosgps.wayrecall.utils.web.SpeedFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>SpeedFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>DealerBlockingFilter</filter-name>
+        <filter-class>ru.sosgps.wayrecall.security.DealerBlockingFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>DealerBlockingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--<filter>-->
+        <!--<filter-name>GzipFilter</filter-name>-->
+        <!--<filter-class>net.sf.ehcache.constructs.web.filter.GzipFilter</filter-class>-->
+    <!--</filter>-->
+
+    <!--<filter-mapping>-->
+        <!--<filter-name>GzipFilter</filter-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
+
+    <session-config>
+        <session-timeout>
+            300
+        </session-timeout>
+    </session-config>
+</web-app>

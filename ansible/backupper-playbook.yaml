@@ -1,0 +1,121 @@
+- hosts: backupper
+  vars:
+    wrc_data: "{{ groups['wrc_server'] | map('extract', hostvars) | first }}"
+    pg_data: "{{ groups['wrc_pg'] | map('extract', hostvars) | first }}"
+    nominatim_data: "{{ groups['wrc_nominatim'] | map('extract', hostvars) | first }}"
+  tasks:
+    - name: install pip
+      tags: [initialisation]
+      apt: {name: python3-pip, state: latest, update_cache: true}
+    - name: Install sdk for object storage
+      tags: [initialisation]
+      pip: {name: boto3}
+    - name: create the backupper user
+      tags: [initialisation]
+      user:
+        name: backupper
+        home: /home/backupper
+        shell: /bin/bash
+        generate_ssh_key: true
+    - name: Make dir for aws confs dumps
+      tags: [initialisation]
+      file: {path: /home/backupper/.aws, state: directory, mode: 'u=rwx,g=rwx,o=rx', owner: backupper}
+    - name: put keys to work with storage
+      copy:
+        content: |
+          [default]
+                      aws_access_key_id = {{ object_storage_api_id }}
+                      aws_secret_access_key = {{ object_storage_api_secret }}
+        dest: /home/backupper/.aws/credentials
+        owner: backupper
+    - name: put .aws/config
+      copy:
+        content: |
+          [default]
+                      region=ru-central1
+        dest: /home/backupper/.aws/config
+        owner: backupper
+    - name: fetch backupper public keys
+      tags: [initialisation]
+      fetch:
+        src: /home/backupper/.ssh/id_rsa.pub
+        dest: "{{ inventory_dir }}/keys/backupper/id_rsa.pub"
+        flat: yes
+    - name: Make dir for backupper script
+      tags: [initialisation]
+      file: {path: /opt/backupper, state: directory}
+    - name: Make dir for backupper dumps
+      tags: [initialisation]
+      file: {path: /var/opt/backupper, state: directory, mode: 'u=rwx,g=rwx,o=rx', owner: backupper, group: backupper}
+    - name: install backup scripts
+      copy:
+        src: ../backupper/{{ item }}
+        dest: /opt/backupper/{{ item }}
+      with_items: [backupper.py, backupper-pack-monthly.py, utils.py, monthly-os-upload.py, nominatim-backupper.py]
+    - name: Gen backupper.yaml config
+      template:
+        src: templates/backupper/backupper.yaml.j2
+        dest: /etc/backupper.yaml
+    - name: Install additional disk
+      when: backupper_dedicated_disk is defined
+      block:
+        - name: Create filesystem on {{ backupper_dedicated_disk }}
+          filesystem:
+            fstype: ext4
+            dev: "{{ backupper_dedicated_disk }}"
+          register: sdb_info_fs
+        - name: Ensure a directory for backupper_dedicated_disk
+          file: { path: "/mnt/backupper_dedicated_disk", state: directory, mode: 'u=rwx,g=rwx,o=r', owner: backupper, group: backupper }
+        - name: Mount a Disk {{ backupper_dedicated_disk }} if necessary
+          mount: { path: "/var/backupper_dedicated_disk", src: "{{ backupper_dedicated_disk }}", fstype: "ext4", state: "mounted" }
+
+- hosts: wrc_server
+  tasks:
+    - name: create the backupper user
+      tags: [initialisation]
+      user:
+        name: backupper
+    - name: Set authorized key by backupper-server
+      authorized_key:
+        user: backupper
+        state: present
+        key: "{{ lookup('file', '{{ inventory_dir }}/keys/backupper/id_rsa.pub') }}"
+    - name: fetch backupper public keys
+      fetch:
+        src: /etc/ssh/ssh_host_ecdsa_key.pub
+        dest: "{{ inventory_dir }}/keys/wrc_server/ssh_host_ecdsa_key.pub"
+        flat: yes
+    - name: fetch MongodbDumper
+      get_url:
+        url: https://maven.uits-labs.ru/ru/xiexed/mongodbdumper/mongodbdumper-1.1-SNAPSHOT-jar-with-dependencies.jar
+        dest: /home/backupper/mongodbdumper.jar
+        checksum: sha256:54993be61241af2bdf9e9099e4530161229f4e0b748f40537668a08cd3d47288
+        owner: backupper
+    - name: Install postgresql-client
+      apt: { name: "postgresql-client", state: latest, update_cache: yes, cache_valid_time: 3600 }
+    - name: Make backupper friend of wayrecall
+      user: { name: backupper, groups: wayrecall, append: yes}
+
+
+- hosts: backupper
+  tasks:
+    - name: add wayrecall.ksb-stels.ru to known_hosts
+      tags: [initialisation]
+      known_hosts:
+        host: wayrecall.ksb-stels.ru
+        key: wayrecall.ksb-stels.ru {{ lookup('file', '{{ inventory_dir }}/keys/wrc_server/ssh_host_ecdsa_key.pub') }}
+        path: /home/backupper/.ssh/known_hosts
+    - name: ensure .ssh/known_hosts is owened by backupper
+      tags: [initialisation]
+      file: {path: /home/backupper/.ssh/known_hosts, state: file, mode: 'u=rwx,g=rwx,o=r', owner: backupper, group: backupper}
+    - name: Make dir for backupper logs
+      tags: [initialisation]
+      file: {path: /var/log/backupper, state: directory, mode: 'u=rwx,g=rwx,o=rx', owner: backupper, group: backupper}
+    - name: "schedule backups"
+      cron:
+        user: backupper
+        name: "wrc_backupper"
+        minute: "17"
+        hour: "2"
+        job: "python3 /opt/backupper/backupper.py 2> /var/log/backupper/backupper.log"
+

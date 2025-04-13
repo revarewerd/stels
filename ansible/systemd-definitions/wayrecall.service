@@ -1,0 +1,13 @@
+[Unit]
+Description=Wayrecall Umbrella
+Wants=packreceiver.service
+Wants=wayrecall-web.service
+Wants=odsmosru.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/true
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

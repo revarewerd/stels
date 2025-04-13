@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+    </bean>
+
+    <bean id="scalaJsonObjectMapper" class="ru.sosgps.wayrecall.utils.web.ScalaJsonObjectMapper"/>
+
+    <bean id="jsonHandler" class="ru.sosgps.wayrecall.utils.web.LoudJsonHander">
+        <property name="mapper">
+            <ref bean="scalaJsonObjectMapper"/>
+        </property>
+    </bean>
+
+    <bean class="ch.ralscha.extdirectspring.controller.Configuration">
+        <property name="sendExceptionMessage" value="true" />
+        <property name="enableBuffer" value="false" />
+    </bean>
+    
+    <bean class="ru.sosgps.wayrecall.utils.errors.EDSRouterExceptionHandler">
+        <constructor-arg index="0" ref="configurationService"/>
+        <constructor-arg index="1" ref="mailErrorReporter"></constructor-arg>
+    </bean>
+
+    <!--<bean id="conversionService"-->
+    <!--class="ru.sosgps.wayrecall.utils.web.EDSConverionService">-->
+
+    <!--</bean>-->
+
+    <bean id="mvcConversionService"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="ru.sosgps.wayrecall.utils.web.ScalaMapConverter"/>
+                <bean class="ru.sosgps.wayrecall.utils.web.ListConverter"/>
+                <bean class="ru.sosgps.wayrecall.utils.web.MapToListConverter"/>
+                <bean class="ru.sosgps.wayrecall.utils.web.DateConverter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="lbsConverter" class="ru.sosgps.wayrecall.data.sleepers.MongoStoredLBSConverter">
+        <property name="innerConverter">
+            <bean class="ru.sosgps.wayrecall.data.sleepers.LBSHttp"/>
+        </property>
+    </bean>
+
+    <bean id="edsStoreGenerator" class="ru.sosgps.wayrecall.utils.web.extjsstore.EDSStoreGenerator" />
+    <bean id="extJs5edsStoreGenerator" class="ru.sosgps.wayrecall.utils.web.extjsstore.ExtJs5EDSStoreGenerator" />
+    <bean id="lbsService" class="ru.sosgps.wayrecall.data.sleepers.ShowLBSService" />
+    <bean id="dealerBlockingServlet" class="ru.sosgps.wayrecall.security.DealerBlockingServlet" />
+
+</beans>

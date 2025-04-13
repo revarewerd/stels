@@ -1,0 +1,16 @@
+[Unit]
+Description=Wayrecall packet odsmosru
+PartOf=wayrecall.service
+After=wayrecall.service
+
+[Service]
+EnvironmentFile=/etc/environment
+WorkingDirectory=/opt/wayrecall
+ExecStart=/usr/bin/java -Xmx256m -jar /opt/wayrecall/bin/odsmosru.jar realtime
+User=wayrecall
+Type=simple
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=wayrecall.service

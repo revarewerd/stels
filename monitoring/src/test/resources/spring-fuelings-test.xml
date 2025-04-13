@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--<context:component-scan base-package="ru.sosgps.wayrecall.monitoring">-->
+        <!--<context:exclude-filter type="annotation" expression="ru.sosgps.wayrecall.utils.ExtDirectService" />-->
+    <!--</context:component-scan>-->
+    <!--<context:component-scan base-package="ru.sosgps.wayrecall.core" />-->
+    <!--<context:component-scan base-package="ru.sosgps.wayrecall.security" />-->
+
+    <bean id="objectsRepositoryReader" class="ru.sosgps.wayrecall.core.ObjectsRepositoryReader"/>
+
+    <bean id="mongoDBManager" class="ru.sosgps.wayrecall.core.MongoDBManager">
+        <property name="databaseName" value="Seniel-test"/>
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.monitoring.web.FuelingReport" />
+
+    <bean class="ru.sosgps.wayrecall.billing.tariff.TariffEDSTestMock" />
+
+    <bean class="ru.sosgps.wayrecall.core.Translations" />
+
+    <bean class="ru.sosgps.wayrecall.data.DummyPackDataConverter" />
+
+    <bean class="ru.sosgps.wayrecall.data.MongoPackagesStore">
+        <property name="skipPreloadCache" value="true"/>
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.data.DirectMongoDBPacketsWriter"/>
+
+    <bean class="ru.sosgps.wayrecall.monitoring.processing.fuelings.FuelingReportService" />
+
+    <bean class="ru.sosgps.wayrecall.TestDataBaseFiller">
+        <property name="mongoDumps">
+            <list>
+                <value>/dump-2014-11-25_04-00-01.zip</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>

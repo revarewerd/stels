@@ -1,0 +1,362 @@
+[
+    {
+        "_id": {
+            "$oid": "52b328be0cf244647b5fbe8a"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka2200_Кортеж",
+        "eqIMEI": "354330031036794",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM3200Q",
+        "eqNote": "не прошил не на связи",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "02681230",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "79854675519",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o948019710797165603"
+    },
+    {
+        "_id": {
+            "$oid": "52b328f20cf244647b5fbe92"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka3200-3_WR_0101_Гутварев.xml",
+        "eqIMEI": "354330031561239",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM3200Q",
+        "eqNote": "",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "03052297",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "+79169297841",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o3308312517575202681"
+    },
+    {
+        "_id": {
+            "$oid": "52b329140cf244647b5fbe94"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka3200-3_WR_0101_Гутварев.xml",
+        "eqIMEI": "354330031568374",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM3200Q",
+        "eqNote": "",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "03052352",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "+79169331835",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o1250109402769888533"
+    },
+    {
+        "_id": {
+            "$oid": "52b329370cf244647b5fbe96"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka3200-3_WR_0101_Гутварев.xml",
+        "eqIMEI": "354330031566410",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM3200Q",
+        "eqNote": "",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "03052253",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "+79168837521",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o3439179039349036975"
+    },
+    {
+        "_id": {
+            "$oid": "52b329550cf244647b5fbe98"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka3200-3_WR_0101_Гутварев.xml",
+        "eqIMEI": "354330031569083",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM3200Q",
+        "eqNote": "",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "03052553",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "+79169297732",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o433953336215617824"
+    },
+    {
+        "_id": {
+            "$oid": "52b329790cf244647b5fbe9a"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka1100-3_WR_0101_Гутварев.xml",
+        "eqIMEI": "356307043359024",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM1100",
+        "eqNote": "",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "03465385",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "+79853102346",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o3561867402665313515"
+    },
+    {
+        "_id": {
+            "$oid": "52b32a030cf244647b5fbe9c"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka1100-3_WR_0101_Гутварев.xml",
+        "eqIMEI": "356307043654796",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM1100",
+        "eqNote": "",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "03465382",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "+79854675532",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o2715173526670318020"
+    },
+    {
+        "_id": {
+            "$oid": "52b32a230cf244647b5fbe9e"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka3200-3_WR_0101_Гутварев.xml",
+        "eqIMEI": "354330031564902",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM3200Q",
+        "eqNote": "",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "03052842",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "+79169299648",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o602823400608177503"
+    },
+    {
+        "_id": {
+            "$oid": "52b32a440cf244647b5fbea0"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka3200-3_WR_0101_Гутварев.xml",
+        "eqIMEI": "354330031134466",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM3200Q",
+        "eqNote": "",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "02844420",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "+79104903312",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o3254293393386804630"
+    },
+    {
+        "_id": {
+            "$oid": "52b32a7f0cf244647b5fbea2"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka1100-3_WR_0101_Гутварев.xml",
+        "eqIMEI": "356307043359008",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM1100",
+        "eqNote": "",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "03464513",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "+79854675529",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o669221619608807459"
+    },
+    {
+        "_id": {
+            "$oid": "52b32a9e0cf244647b5fbea4"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka3200-3_WR_0101_Гутварев.xml",
+        "eqIMEI": "354330031561197",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM3200Q",
+        "eqNote": "",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "03052300",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "+79168837498",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o1263573357717097435"
+    },
+    {
+        "_id": {
+            "$oid": "52b32ac30cf244647b5fbea6"
+        },
+        "accountId": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "eqConfig": "",
+        "eqFirmware": "proshivka2200_Кортеж",
+        "eqIMEI": "354330031016465",
+        "eqLogin": "0101",
+        "eqMark": "Teltonika",
+        "eqModel": "FM3200Q",
+        "eqNote": "",
+        "eqOwner": "Гутварев Александр",
+        "eqPass": "0101",
+        "eqRightToUse": "собственность",
+        "eqSellDate": "2013-09-24T00:00:00",
+        "eqSerNum": "02681222",
+        "eqWork": "Монтаж Клиента",
+        "eqWorkDate": null,
+        "eqtype": "Основной абонентский терминал",
+        "instPlace": "",
+        "simICCID": "",
+        "simNote": "",
+        "simNumber": "+79154838315",
+        "simOwner": "Клиент",
+        "simProvider": "",
+        "uid": "o2875232062468230992"
+    }
+]

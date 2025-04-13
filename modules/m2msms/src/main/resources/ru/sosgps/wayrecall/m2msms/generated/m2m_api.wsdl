@@ -1,0 +1,2441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://mcommunicator.ru/M2M" xmlns:s1="http://mcommunicator.ru/M2M/AbstractTypes" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://mcommunicator.ru/M2M" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:types>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://mcommunicator.ru/M2M">
+            <s:element name="SendMessage">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="msid" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="naming" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessageResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="SendMessageResult" type="s:long" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessageAtDate">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="msid" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="naming" type="s:string" />
+                        <s:element minOccurs="1" maxOccurs="1" name="scheduledSendDate" type="s:dateTime" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessageAtDateResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="SendMessageAtDateResult" type="s:long" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessageWithValidityPeriod">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="msid" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="naming" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="validityPeriod" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessageWithValidityPeriodResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="SendMessageWithValidityPeriodResult" type="s:long" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessageToMultipleSubscribers">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="msids" type="tns:ArrayOfString" />
+                        <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="naming" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfString">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="SendMessageToMultipleSubscribersResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="SendMessageToMultipleSubscribersResult" type="tns:ArrayOfSendMessageIDs" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfSendMessageIDs">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="SendMessageIDs" nillable="true" type="tns:SendMessageIDs" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="SendMessageIDs">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Msid" type="s:string" />
+                    <s:element minOccurs="1" maxOccurs="1" name="MessageID" type="s:long" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="SendMessageToMultipleSubscribersAtDate">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="msids" type="tns:ArrayOfString" />
+                        <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="naming" type="s:string" />
+                        <s:element minOccurs="1" maxOccurs="1" name="scheduledSendDate" type="s:dateTime" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessageToMultipleSubscribersAtDateResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="SendMessageToMultipleSubscribersAtDateResult" type="tns:ArrayOfSendMessageIDs" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessages">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="msids" type="tns:ArrayOfString" />
+                        <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="naming" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessagesResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="SendMessagesResult" type="tns:ArrayOfSendMessageIDs" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessagesAtDate">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="msids" type="tns:ArrayOfString" />
+                        <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="naming" type="s:string" />
+                        <s:element minOccurs="1" maxOccurs="1" name="scheduledSendDate" type="s:dateTime" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessagesAtDateResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="SendMessagesAtDateResult" type="tns:ArrayOfSendMessageIDs" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessagesWithValidityPeriod">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="msids" type="tns:ArrayOfString" />
+                        <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="naming" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="validityPeriod" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessagesWithValidityPeriodResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="SendMessagesWithValidityPeriodResult" type="tns:ArrayOfSendMessageIDs" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessagesAtDateWithValidityPeriod">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="msids" type="tns:ArrayOfString" />
+                        <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="naming" type="s:string" />
+                        <s:element minOccurs="1" maxOccurs="1" name="scheduledSendDate" type="s:dateTime" />
+                        <s:element minOccurs="0" maxOccurs="1" name="validityPeriod" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendMessagesAtDateWithValidityPeriodResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="SendMessagesAtDateWithValidityPeriodResult" type="tns:ArrayOfSendMessageIDs" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SendVariousMessages">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="msidsAndMessages" type="tns:ArrayOfSubmit" />
+                        <s:element minOccurs="0" maxOccurs="1" name="naming" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="scheduledSendDate" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="validityPeriod" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfSubmit">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="Submit" nillable="true" type="tns:Submit" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="Submit">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Msid" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="SendVariousMessagesResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="SendVariousMessagesResult" type="tns:ArrayOfSendMessageIDs" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetMessageStatus">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="messageID" type="s:long" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetMessageStatusResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="GetMessageStatusResult" type="tns:ArrayOfDeliveryInfo" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfDeliveryInfo">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="DeliveryInfo" nillable="true" type="tns:DeliveryInfo" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="DeliveryInfo">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Msid" type="s:string" />
+                    <s:element minOccurs="1" maxOccurs="1" name="DeliveryStatus" type="tns:DeliveryStatus" />
+                    <s:element minOccurs="1" maxOccurs="1" name="DeliveryDate" type="s:dateTime" />
+                    <s:element minOccurs="1" maxOccurs="1" name="UserDeliveryDate" nillable="true" type="s:dateTime" />
+                    <s:element minOccurs="1" maxOccurs="1" name="PartCount" type="s:int" />
+                </s:sequence>
+            </s:complexType>
+            <s:simpleType name="DeliveryStatus">
+                <s:restriction base="s:string">
+                    <s:enumeration value="Pending" />
+                    <s:enumeration value="Sending" />
+                    <s:enumeration value="Sent" />
+                    <s:enumeration value="NotSent" />
+                    <s:enumeration value="Delivered" />
+                    <s:enumeration value="NotDelivered" />
+                    <s:enumeration value="TimedOut" />
+                    <s:enumeration value="Error" />
+                    <s:enumeration value="Cancelled" />
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="GetMessagesStatus">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="messageIDs" type="tns:ArrayOfLong" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfLong">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="long" type="s:long" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetMessagesStatusResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="GetMessagesStatusResult" type="tns:ArrayOfMessageStatusWithID" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfMessageStatusWithID">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="MessageStatusWithID" nillable="true" type="tns:MessageStatusWithID" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="MessageStatusWithID">
+                <s:sequence>
+                    <s:element minOccurs="1" maxOccurs="1" name="MessageID" type="s:long" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Delivery" type="tns:ArrayOfDeliveryInfo" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetMessages">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="messageType" type="tns:RequestMessageType" />
+                        <s:element minOccurs="0" maxOccurs="1" name="subscriberMsids" type="tns:ArrayOfString" />
+                        <s:element minOccurs="1" maxOccurs="1" name="DateFrom" type="s:dateTime" />
+                        <s:element minOccurs="1" maxOccurs="1" name="DateTo" type="s:dateTime" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:simpleType name="RequestMessageType">
+                <s:restriction base="s:string">
+                    <s:enumeration value="All" />
+                    <s:enumeration value="MO" />
+                    <s:enumeration value="MT" />
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="GetMessagesResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="GetMessagesResult" type="tns:ArrayOfMessageInfo" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfMessageInfo">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="MessageInfo" nillable="true" type="tns:MessageInfo" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="MessageInfo">
+                <s:sequence>
+                    <s:element minOccurs="1" maxOccurs="1" name="MessageID" type="s:long" />
+                    <s:element minOccurs="1" maxOccurs="1" name="CreationDate" type="s:dateTime" />
+                    <s:element minOccurs="0" maxOccurs="1" name="SenderMsid" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="SenderName" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="DeliveryInfo" type="tns:ArrayOfDeliveryInfoExt" />
+                    <s:element minOccurs="1" maxOccurs="1" name="MessageType" type="tns:MessageType" />
+                    <s:element minOccurs="0" maxOccurs="1" name="MessageText" type="s:string" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="ArrayOfDeliveryInfoExt">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="DeliveryInfoExt" nillable="true" type="tns:DeliveryInfoExt" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="DeliveryInfoExt">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="TargetMsid" type="s:string" />
+                    <s:element minOccurs="1" maxOccurs="1" name="DeliveryStatus" type="tns:DeliveryStatus" />
+                    <s:element minOccurs="1" maxOccurs="1" name="DeliveryDate" type="s:dateTime" />
+                    <s:element minOccurs="0" maxOccurs="1" name="TargetName" type="s:string" />
+                    <s:element minOccurs="1" maxOccurs="1" name="UserDeliveryDate" nillable="true" type="s:dateTime" />
+                </s:sequence>
+            </s:complexType>
+            <s:simpleType name="MessageType">
+                <s:restriction base="s:string">
+                    <s:enumeration value="MO" />
+                    <s:enumeration value="MT" />
+                    <s:enumeration value="Mailing" />
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="GetStatistics">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetStatisticsResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="GetStatisticsResult" type="tns:StatisticsInfo" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="StatisticsInfo">
+                <s:sequence>
+                    <s:element minOccurs="1" maxOccurs="1" name="Year" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="Month" type="s:unsignedByte" />
+                    <s:element minOccurs="1" maxOccurs="1" name="PacketSize" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="IncludedSMS" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="ExtraSMS" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="Remainder" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="ExternalPacketSize" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="ExternalIncludedSms" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="ExternalExtraSms" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="ExternalReminder" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="GeneralPacketSize" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="GeneralIncludedSms" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="GeneralExtraSms" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="GeneralReminder" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="MTSRemainder" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="MegafonRemainder" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="BeelineRemainder" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="RostelecomRemainder" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="Tele2Remainder" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="MotivRemainder" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="MtsTransactional" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="MegafonTransactional" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="BeelineTransactional" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="Tele2Transactional" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="MtsService" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="MegafonService" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="BeelineService" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="Tele2Service" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="TotalBilledSms" type="s:int" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="CreateMailingList">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="contacts" type="tns:ArrayOfMailingListContact" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfMailingListContact">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="MailingListContact" nillable="true" type="tns:MailingListContact" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="MailingListContact">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Msid" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Attributes" type="tns:ArrayOfMailingListAttribute" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="ArrayOfMailingListAttribute">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="MailingListAttribute" nillable="true" type="tns:MailingListAttribute" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="MailingListAttribute">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="CreateMailingListResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="CreateMailingListResult" type="s:long" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetMailingLists">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetMailingListsResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="GetMailingListsResult" type="tns:ArrayOfResultMailingList" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfResultMailingList">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="ResultMailingList" nillable="true" type="tns:ResultMailingList" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="ResultMailingList">
+                <s:sequence>
+                    <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:long" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="DeleteMailingLists">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="mailingListIDs" type="tns:ArrayOfLong" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="DeleteMailingListsResponse">
+                <s:complexType />
+            </s:element>
+            <s:element name="GetMailingListContacts">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="mailingListId" type="s:long" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetMailingListContactsResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="GetMailingListContactsResult" type="tns:ArrayOfMailingListContact" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SetMailingListContacts">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="mailingListId" type="s:long" />
+                        <s:element minOccurs="0" maxOccurs="1" name="contacts" type="tns:ArrayOfMailingListContact" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="SetMailingListContactsResponse">
+                <s:complexType />
+            </s:element>
+            <s:element name="AddUser">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="userName" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="userMSID" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="userEmail" type="s:string" />
+                        <s:element minOccurs="1" maxOccurs="1" name="webAccessEnabled" type="s:boolean" />
+                        <s:element minOccurs="1" maxOccurs="1" name="accessLevel" type="tns:AccessLevel" />
+                        <s:element minOccurs="1" maxOccurs="1" name="userGroupId" type="s:long" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:simpleType name="AccessLevel">
+                <s:restriction base="s:string">
+                    <s:enumeration value="Administrator" />
+                    <s:enumeration value="Operator" />
+                    <s:enumeration value="BaseUser" />
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="AddUserResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="AddUserResult" type="s:long" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetGroups">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetGroupsResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="GetGroupsResult" type="tns:ArrayOfSubscriberGroupInfo" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfSubscriberGroupInfo">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="SubscriberGroupInfo" nillable="true" type="tns:SubscriberGroupInfo" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="SubscriberGroupInfo">
+                <s:sequence>
+                    <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:long" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+                    <s:element minOccurs="1" maxOccurs="1" name="Color" type="s:int" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="GetUsers">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetUsersResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="GetUsersResult" type="tns:ArrayOfUserInfo" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfUserInfo">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="UserInfo" nillable="true" type="tns:UserInfo" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="UserInfo">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Msid" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+                    <s:element minOccurs="1" maxOccurs="1" name="GroupID" type="s:long" />
+                    <s:element minOccurs="1" maxOccurs="1" name="WebAccessEnabled" nillable="true" type="s:boolean" />
+                    <s:element minOccurs="1" maxOccurs="1" name="AccessLevel" nillable="true" type="tns:AccessLevel" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="DeleteUser">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="msid" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="DeleteUserResponse">
+                <s:complexType />
+            </s:element>
+            <s:element name="CreateMailing">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+                        <s:element minOccurs="1" maxOccurs="1" name="mailingListID" type="s:long" />
+                        <s:element minOccurs="0" maxOccurs="1" name="text" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="date" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="naming" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="CreateMailingResponse">
+                <s:complexType />
+            </s:element>
+            <s:element name="GetCompanyMode">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetCompanyModeResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="GetCompanyModeResult" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetBalance">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+                        <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetBalanceResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="GetBalanceResult" type="s:string" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="long" type="s:long" />
+            <s:element name="ArrayOfSendMessageIDs" nillable="true" type="tns:ArrayOfSendMessageIDs" />
+            <s:element name="ArrayOfDeliveryInfo" nillable="true" type="tns:ArrayOfDeliveryInfo" />
+            <s:element name="ArrayOfMessageStatusWithID" nillable="true" type="tns:ArrayOfMessageStatusWithID" />
+            <s:element name="ArrayOfMessageInfo" nillable="true" type="tns:ArrayOfMessageInfo" />
+            <s:element name="StatisticsInfo" nillable="true" type="tns:StatisticsInfo" />
+            <s:element name="ArrayOfResultMailingList" nillable="true" type="tns:ArrayOfResultMailingList" />
+            <s:element name="ArrayOfMailingListContact" nillable="true" type="tns:ArrayOfMailingListContact" />
+            <s:element name="ArrayOfSubscriberGroupInfo" nillable="true" type="tns:ArrayOfSubscriberGroupInfo" />
+            <s:element name="ArrayOfUserInfo" nillable="true" type="tns:ArrayOfUserInfo" />
+            <s:element name="string" nillable="true" type="s:string" />
+        </s:schema>
+        <s:schema targetNamespace="http://mcommunicator.ru/M2M/AbstractTypes">
+            <s:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+            <s:complexType name="StringArray">
+                        <s:sequence>
+                            <s:element minOccurs="0" maxOccurs="unbounded" name="String" type="s:string" />
+                        </s:sequence>
+            </s:complexType>
+        </s:schema>
+    </wsdl:types>
+    <wsdl:message name="SendMessageSoapIn">
+        <wsdl:part name="parameters" element="tns:SendMessage" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageSoapOut">
+        <wsdl:part name="parameters" element="tns:SendMessageResponse" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageAtDateSoapIn">
+        <wsdl:part name="parameters" element="tns:SendMessageAtDate" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageAtDateSoapOut">
+        <wsdl:part name="parameters" element="tns:SendMessageAtDateResponse" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageWithValidityPeriodSoapIn">
+        <wsdl:part name="parameters" element="tns:SendMessageWithValidityPeriod" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageWithValidityPeriodSoapOut">
+        <wsdl:part name="parameters" element="tns:SendMessageWithValidityPeriodResponse" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersSoapIn">
+        <wsdl:part name="parameters" element="tns:SendMessageToMultipleSubscribers" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersSoapOut">
+        <wsdl:part name="parameters" element="tns:SendMessageToMultipleSubscribersResponse" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersAtDateSoapIn">
+        <wsdl:part name="parameters" element="tns:SendMessageToMultipleSubscribersAtDate" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersAtDateSoapOut">
+        <wsdl:part name="parameters" element="tns:SendMessageToMultipleSubscribersAtDateResponse" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesSoapIn">
+        <wsdl:part name="parameters" element="tns:SendMessages" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesSoapOut">
+        <wsdl:part name="parameters" element="tns:SendMessagesResponse" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateSoapIn">
+        <wsdl:part name="parameters" element="tns:SendMessagesAtDate" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateSoapOut">
+        <wsdl:part name="parameters" element="tns:SendMessagesAtDateResponse" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesWithValidityPeriodSoapIn">
+        <wsdl:part name="parameters" element="tns:SendMessagesWithValidityPeriod" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesWithValidityPeriodSoapOut">
+        <wsdl:part name="parameters" element="tns:SendMessagesWithValidityPeriodResponse" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateWithValidityPeriodSoapIn">
+        <wsdl:part name="parameters" element="tns:SendMessagesAtDateWithValidityPeriod" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateWithValidityPeriodSoapOut">
+        <wsdl:part name="parameters" element="tns:SendMessagesAtDateWithValidityPeriodResponse" />
+    </wsdl:message>
+    <wsdl:message name="SendVariousMessagesSoapIn">
+        <wsdl:part name="parameters" element="tns:SendVariousMessages" />
+    </wsdl:message>
+    <wsdl:message name="SendVariousMessagesSoapOut">
+        <wsdl:part name="parameters" element="tns:SendVariousMessagesResponse" />
+    </wsdl:message>
+    <wsdl:message name="GetMessageStatusSoapIn">
+        <wsdl:part name="parameters" element="tns:GetMessageStatus" />
+    </wsdl:message>
+    <wsdl:message name="GetMessageStatusSoapOut">
+        <wsdl:part name="parameters" element="tns:GetMessageStatusResponse" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesStatusSoapIn">
+        <wsdl:part name="parameters" element="tns:GetMessagesStatus" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesStatusSoapOut">
+        <wsdl:part name="parameters" element="tns:GetMessagesStatusResponse" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesSoapIn">
+        <wsdl:part name="parameters" element="tns:GetMessages" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesSoapOut">
+        <wsdl:part name="parameters" element="tns:GetMessagesResponse" />
+    </wsdl:message>
+    <wsdl:message name="GetStatisticsSoapIn">
+        <wsdl:part name="parameters" element="tns:GetStatistics" />
+    </wsdl:message>
+    <wsdl:message name="GetStatisticsSoapOut">
+        <wsdl:part name="parameters" element="tns:GetStatisticsResponse" />
+    </wsdl:message>
+    <wsdl:message name="CreateMailingListSoapIn">
+        <wsdl:part name="parameters" element="tns:CreateMailingList" />
+    </wsdl:message>
+    <wsdl:message name="CreateMailingListSoapOut">
+        <wsdl:part name="parameters" element="tns:CreateMailingListResponse" />
+    </wsdl:message>
+    <wsdl:message name="GetMailingListsSoapIn">
+        <wsdl:part name="parameters" element="tns:GetMailingLists" />
+    </wsdl:message>
+    <wsdl:message name="GetMailingListsSoapOut">
+        <wsdl:part name="parameters" element="tns:GetMailingListsResponse" />
+    </wsdl:message>
+    <wsdl:message name="DeleteMailingListsSoapIn">
+        <wsdl:part name="parameters" element="tns:DeleteMailingLists" />
+    </wsdl:message>
+    <wsdl:message name="DeleteMailingListsSoapOut">
+        <wsdl:part name="parameters" element="tns:DeleteMailingListsResponse" />
+    </wsdl:message>
+    <wsdl:message name="GetMailingListContactsSoapIn">
+        <wsdl:part name="parameters" element="tns:GetMailingListContacts" />
+    </wsdl:message>
+    <wsdl:message name="GetMailingListContactsSoapOut">
+        <wsdl:part name="parameters" element="tns:GetMailingListContactsResponse" />
+    </wsdl:message>
+    <wsdl:message name="SetMailingListContactsSoapIn">
+        <wsdl:part name="parameters" element="tns:SetMailingListContacts" />
+    </wsdl:message>
+    <wsdl:message name="SetMailingListContactsSoapOut">
+        <wsdl:part name="parameters" element="tns:SetMailingListContactsResponse" />
+    </wsdl:message>
+    <wsdl:message name="AddUserSoapIn">
+        <wsdl:part name="parameters" element="tns:AddUser" />
+    </wsdl:message>
+    <wsdl:message name="AddUserSoapOut">
+        <wsdl:part name="parameters" element="tns:AddUserResponse" />
+    </wsdl:message>
+    <wsdl:message name="GetGroupsSoapIn">
+        <wsdl:part name="parameters" element="tns:GetGroups" />
+    </wsdl:message>
+    <wsdl:message name="GetGroupsSoapOut">
+        <wsdl:part name="parameters" element="tns:GetGroupsResponse" />
+    </wsdl:message>
+    <wsdl:message name="GetUsersSoapIn">
+        <wsdl:part name="parameters" element="tns:GetUsers" />
+    </wsdl:message>
+    <wsdl:message name="GetUsersSoapOut">
+        <wsdl:part name="parameters" element="tns:GetUsersResponse" />
+    </wsdl:message>
+    <wsdl:message name="DeleteUserSoapIn">
+        <wsdl:part name="parameters" element="tns:DeleteUser" />
+    </wsdl:message>
+    <wsdl:message name="DeleteUserSoapOut">
+        <wsdl:part name="parameters" element="tns:DeleteUserResponse" />
+    </wsdl:message>
+    <wsdl:message name="CreateMailingSoapIn">
+        <wsdl:part name="parameters" element="tns:CreateMailing" />
+    </wsdl:message>
+    <wsdl:message name="CreateMailingSoapOut">
+        <wsdl:part name="parameters" element="tns:CreateMailingResponse" />
+    </wsdl:message>
+    <wsdl:message name="GetCompanyModeSoapIn">
+        <wsdl:part name="parameters" element="tns:GetCompanyMode" />
+    </wsdl:message>
+    <wsdl:message name="GetCompanyModeSoapOut">
+        <wsdl:part name="parameters" element="tns:GetCompanyModeResponse" />
+    </wsdl:message>
+    <wsdl:message name="GetBalanceSoapIn">
+        <wsdl:part name="parameters" element="tns:GetBalance" />
+    </wsdl:message>
+    <wsdl:message name="GetBalanceSoapOut">
+        <wsdl:part name="parameters" element="tns:GetBalanceResponse" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageHttpGetIn">
+        <wsdl:part name="msid" type="s:string" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageHttpGetOut">
+        <wsdl:part name="Body" element="tns:long" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageAtDateHttpGetIn">
+        <wsdl:part name="msid" type="s:string" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="scheduledSendDate" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageAtDateHttpGetOut">
+        <wsdl:part name="Body" element="tns:long" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageWithValidityPeriodHttpGetIn">
+        <wsdl:part name="msid" type="s:string" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="validityPeriod" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageWithValidityPeriodHttpGetOut">
+        <wsdl:part name="Body" element="tns:long" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersHttpGetIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersAtDateHttpGetIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="scheduledSendDate" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersAtDateHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesHttpGetIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateHttpGetIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="scheduledSendDate" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesWithValidityPeriodHttpGetIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="validityPeriod" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesWithValidityPeriodHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateWithValidityPeriodHttpGetIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="scheduledSendDate" type="s:string" />
+        <wsdl:part name="validityPeriod" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateWithValidityPeriodHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="GetMessageStatusHttpGetIn">
+        <wsdl:part name="messageID" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetMessageStatusHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfDeliveryInfo" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesStatusHttpGetIn">
+        <wsdl:part name="messageIDs" type="s1:StringArray" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesStatusHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfMessageStatusWithID" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesHttpGetIn">
+        <wsdl:part name="messageType" type="s:string" />
+        <wsdl:part name="subscriberMsids" type="s1:StringArray" />
+        <wsdl:part name="DateFrom" type="s:string" />
+        <wsdl:part name="DateTo" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfMessageInfo" />
+    </wsdl:message>
+    <wsdl:message name="GetStatisticsHttpGetIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetStatisticsHttpGetOut">
+        <wsdl:part name="Body" element="tns:StatisticsInfo" />
+    </wsdl:message>
+    <wsdl:message name="GetMailingListsHttpGetIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetMailingListsHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfResultMailingList" />
+    </wsdl:message>
+    <wsdl:message name="DeleteMailingListsHttpGetIn">
+        <wsdl:part name="mailingListIDs" type="s1:StringArray" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="DeleteMailingListsHttpGetOut" />
+    <wsdl:message name="GetMailingListContactsHttpGetIn">
+        <wsdl:part name="mailingListId" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetMailingListContactsHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfMailingListContact" />
+    </wsdl:message>
+    <wsdl:message name="AddUserHttpGetIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+        <wsdl:part name="userName" type="s:string" />
+        <wsdl:part name="userMSID" type="s:string" />
+        <wsdl:part name="userEmail" type="s:string" />
+        <wsdl:part name="webAccessEnabled" type="s:string" />
+        <wsdl:part name="accessLevel" type="s:string" />
+        <wsdl:part name="userGroupId" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="AddUserHttpGetOut">
+        <wsdl:part name="Body" element="tns:long" />
+    </wsdl:message>
+    <wsdl:message name="GetGroupsHttpGetIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetGroupsHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSubscriberGroupInfo" />
+    </wsdl:message>
+    <wsdl:message name="GetUsersHttpGetIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetUsersHttpGetOut">
+        <wsdl:part name="Body" element="tns:ArrayOfUserInfo" />
+    </wsdl:message>
+    <wsdl:message name="DeleteUserHttpGetIn">
+        <wsdl:part name="msid" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="DeleteUserHttpGetOut" />
+    <wsdl:message name="CreateMailingHttpGetIn">
+        <wsdl:part name="name" type="s:string" />
+        <wsdl:part name="mailingListID" type="s:string" />
+        <wsdl:part name="text" type="s:string" />
+        <wsdl:part name="date" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="CreateMailingHttpGetOut" />
+    <wsdl:message name="GetCompanyModeHttpGetIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetCompanyModeHttpGetOut">
+        <wsdl:part name="Body" element="tns:string" />
+    </wsdl:message>
+    <wsdl:message name="GetBalanceHttpGetIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetBalanceHttpGetOut">
+        <wsdl:part name="Body" element="tns:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageHttpPostIn">
+        <wsdl:part name="msid" type="s:string" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageHttpPostOut">
+        <wsdl:part name="Body" element="tns:long" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageAtDateHttpPostIn">
+        <wsdl:part name="msid" type="s:string" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="scheduledSendDate" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageAtDateHttpPostOut">
+        <wsdl:part name="Body" element="tns:long" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageWithValidityPeriodHttpPostIn">
+        <wsdl:part name="msid" type="s:string" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="validityPeriod" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageWithValidityPeriodHttpPostOut">
+        <wsdl:part name="Body" element="tns:long" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersHttpPostIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersAtDateHttpPostIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="scheduledSendDate" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessageToMultipleSubscribersAtDateHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesHttpPostIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateHttpPostIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="scheduledSendDate" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesWithValidityPeriodHttpPostIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="validityPeriod" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesWithValidityPeriodHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateWithValidityPeriodHttpPostIn">
+        <wsdl:part name="msids" type="s1:StringArray" />
+        <wsdl:part name="message" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="scheduledSendDate" type="s:string" />
+        <wsdl:part name="validityPeriod" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="SendMessagesAtDateWithValidityPeriodHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSendMessageIDs" />
+    </wsdl:message>
+    <wsdl:message name="GetMessageStatusHttpPostIn">
+        <wsdl:part name="messageID" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetMessageStatusHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfDeliveryInfo" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesStatusHttpPostIn">
+        <wsdl:part name="messageIDs" type="s1:StringArray" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesStatusHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfMessageStatusWithID" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesHttpPostIn">
+        <wsdl:part name="messageType" type="s:string" />
+        <wsdl:part name="subscriberMsids" type="s1:StringArray" />
+        <wsdl:part name="DateFrom" type="s:string" />
+        <wsdl:part name="DateTo" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetMessagesHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfMessageInfo" />
+    </wsdl:message>
+    <wsdl:message name="GetStatisticsHttpPostIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetStatisticsHttpPostOut">
+        <wsdl:part name="Body" element="tns:StatisticsInfo" />
+    </wsdl:message>
+    <wsdl:message name="GetMailingListsHttpPostIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetMailingListsHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfResultMailingList" />
+    </wsdl:message>
+    <wsdl:message name="DeleteMailingListsHttpPostIn">
+        <wsdl:part name="mailingListIDs" type="s1:StringArray" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="DeleteMailingListsHttpPostOut" />
+    <wsdl:message name="GetMailingListContactsHttpPostIn">
+        <wsdl:part name="mailingListId" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetMailingListContactsHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfMailingListContact" />
+    </wsdl:message>
+    <wsdl:message name="AddUserHttpPostIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+        <wsdl:part name="userName" type="s:string" />
+        <wsdl:part name="userMSID" type="s:string" />
+        <wsdl:part name="userEmail" type="s:string" />
+        <wsdl:part name="webAccessEnabled" type="s:string" />
+        <wsdl:part name="accessLevel" type="s:string" />
+        <wsdl:part name="userGroupId" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="AddUserHttpPostOut">
+        <wsdl:part name="Body" element="tns:long" />
+    </wsdl:message>
+    <wsdl:message name="GetGroupsHttpPostIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetGroupsHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfSubscriberGroupInfo" />
+    </wsdl:message>
+    <wsdl:message name="GetUsersHttpPostIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetUsersHttpPostOut">
+        <wsdl:part name="Body" element="tns:ArrayOfUserInfo" />
+    </wsdl:message>
+    <wsdl:message name="DeleteUserHttpPostIn">
+        <wsdl:part name="msid" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="DeleteUserHttpPostOut" />
+    <wsdl:message name="CreateMailingHttpPostIn">
+        <wsdl:part name="name" type="s:string" />
+        <wsdl:part name="mailingListID" type="s:string" />
+        <wsdl:part name="text" type="s:string" />
+        <wsdl:part name="date" type="s:string" />
+        <wsdl:part name="naming" type="s:string" />
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="CreateMailingHttpPostOut" />
+    <wsdl:message name="GetCompanyModeHttpPostIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetCompanyModeHttpPostOut">
+        <wsdl:part name="Body" element="tns:string" />
+    </wsdl:message>
+    <wsdl:message name="GetBalanceHttpPostIn">
+        <wsdl:part name="login" type="s:string" />
+        <wsdl:part name="password" type="s:string" />
+    </wsdl:message>
+    <wsdl:message name="GetBalanceHttpPostOut">
+        <wsdl:part name="Body" element="tns:string" />
+    </wsdl:message>
+    <wsdl:portType name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APISoap">
+        <wsdl:operation name="SendMessage">
+            <wsdl:input message="tns:SendMessageSoapIn" />
+            <wsdl:output message="tns:SendMessageSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageAtDate">
+            <wsdl:input message="tns:SendMessageAtDateSoapIn" />
+            <wsdl:output message="tns:SendMessageAtDateSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageWithValidityPeriod">
+            <wsdl:input message="tns:SendMessageWithValidityPeriodSoapIn" />
+            <wsdl:output message="tns:SendMessageWithValidityPeriodSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribers">
+            <wsdl:input message="tns:SendMessageToMultipleSubscribersSoapIn" />
+            <wsdl:output message="tns:SendMessageToMultipleSubscribersSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribersAtDate">
+            <wsdl:input message="tns:SendMessageToMultipleSubscribersAtDateSoapIn" />
+            <wsdl:output message="tns:SendMessageToMultipleSubscribersAtDateSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessages">
+            <wsdl:input message="tns:SendMessagesSoapIn" />
+            <wsdl:output message="tns:SendMessagesSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDate">
+            <wsdl:input message="tns:SendMessagesAtDateSoapIn" />
+            <wsdl:output message="tns:SendMessagesAtDateSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesWithValidityPeriod">
+            <wsdl:input message="tns:SendMessagesWithValidityPeriodSoapIn" />
+            <wsdl:output message="tns:SendMessagesWithValidityPeriodSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDateWithValidityPeriod">
+            <wsdl:input message="tns:SendMessagesAtDateWithValidityPeriodSoapIn" />
+            <wsdl:output message="tns:SendMessagesAtDateWithValidityPeriodSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendVariousMessages">
+            <wsdl:input message="tns:SendVariousMessagesSoapIn" />
+            <wsdl:output message="tns:SendVariousMessagesSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMessageStatus">
+            <wsdl:input message="tns:GetMessageStatusSoapIn" />
+            <wsdl:output message="tns:GetMessageStatusSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMessagesStatus">
+            <wsdl:input message="tns:GetMessagesStatusSoapIn" />
+            <wsdl:output message="tns:GetMessagesStatusSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMessages">
+            <wsdl:input message="tns:GetMessagesSoapIn" />
+            <wsdl:output message="tns:GetMessagesSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetStatistics">
+            <wsdl:input message="tns:GetStatisticsSoapIn" />
+            <wsdl:output message="tns:GetStatisticsSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="CreateMailingList">
+            <wsdl:input message="tns:CreateMailingListSoapIn" />
+            <wsdl:output message="tns:CreateMailingListSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingLists">
+            <wsdl:input message="tns:GetMailingListsSoapIn" />
+            <wsdl:output message="tns:GetMailingListsSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="DeleteMailingLists">
+            <wsdl:input message="tns:DeleteMailingListsSoapIn" />
+            <wsdl:output message="tns:DeleteMailingListsSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingListContacts">
+            <wsdl:input message="tns:GetMailingListContactsSoapIn" />
+            <wsdl:output message="tns:GetMailingListContactsSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SetMailingListContacts">
+            <wsdl:input message="tns:SetMailingListContactsSoapIn" />
+            <wsdl:output message="tns:SetMailingListContactsSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="AddUser">
+            <wsdl:input message="tns:AddUserSoapIn" />
+            <wsdl:output message="tns:AddUserSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetGroups">
+            <wsdl:input message="tns:GetGroupsSoapIn" />
+            <wsdl:output message="tns:GetGroupsSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetUsers">
+            <wsdl:input message="tns:GetUsersSoapIn" />
+            <wsdl:output message="tns:GetUsersSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="DeleteUser">
+            <wsdl:input message="tns:DeleteUserSoapIn" />
+            <wsdl:output message="tns:DeleteUserSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="CreateMailing">
+            <wsdl:input message="tns:CreateMailingSoapIn" />
+            <wsdl:output message="tns:CreateMailingSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetCompanyMode">
+            <wsdl:input message="tns:GetCompanyModeSoapIn" />
+            <wsdl:output message="tns:GetCompanyModeSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetBalance">
+            <wsdl:input message="tns:GetBalanceSoapIn" />
+            <wsdl:output message="tns:GetBalanceSoapOut" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:portType name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APIHttpGet">
+        <wsdl:operation name="SendMessage">
+            <wsdl:input message="tns:SendMessageHttpGetIn" />
+            <wsdl:output message="tns:SendMessageHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageAtDate">
+            <wsdl:input message="tns:SendMessageAtDateHttpGetIn" />
+            <wsdl:output message="tns:SendMessageAtDateHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageWithValidityPeriod">
+            <wsdl:input message="tns:SendMessageWithValidityPeriodHttpGetIn" />
+            <wsdl:output message="tns:SendMessageWithValidityPeriodHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribers">
+            <wsdl:input message="tns:SendMessageToMultipleSubscribersHttpGetIn" />
+            <wsdl:output message="tns:SendMessageToMultipleSubscribersHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribersAtDate">
+            <wsdl:input message="tns:SendMessageToMultipleSubscribersAtDateHttpGetIn" />
+            <wsdl:output message="tns:SendMessageToMultipleSubscribersAtDateHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessages">
+            <wsdl:input message="tns:SendMessagesHttpGetIn" />
+            <wsdl:output message="tns:SendMessagesHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDate">
+            <wsdl:input message="tns:SendMessagesAtDateHttpGetIn" />
+            <wsdl:output message="tns:SendMessagesAtDateHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesWithValidityPeriod">
+            <wsdl:input message="tns:SendMessagesWithValidityPeriodHttpGetIn" />
+            <wsdl:output message="tns:SendMessagesWithValidityPeriodHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDateWithValidityPeriod">
+            <wsdl:input message="tns:SendMessagesAtDateWithValidityPeriodHttpGetIn" />
+            <wsdl:output message="tns:SendMessagesAtDateWithValidityPeriodHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMessageStatus">
+            <wsdl:input message="tns:GetMessageStatusHttpGetIn" />
+            <wsdl:output message="tns:GetMessageStatusHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMessagesStatus">
+            <wsdl:input message="tns:GetMessagesStatusHttpGetIn" />
+            <wsdl:output message="tns:GetMessagesStatusHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMessages">
+            <wsdl:input message="tns:GetMessagesHttpGetIn" />
+            <wsdl:output message="tns:GetMessagesHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetStatistics">
+            <wsdl:input message="tns:GetStatisticsHttpGetIn" />
+            <wsdl:output message="tns:GetStatisticsHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingLists">
+            <wsdl:input message="tns:GetMailingListsHttpGetIn" />
+            <wsdl:output message="tns:GetMailingListsHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="DeleteMailingLists">
+            <wsdl:input message="tns:DeleteMailingListsHttpGetIn" />
+            <wsdl:output message="tns:DeleteMailingListsHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingListContacts">
+            <wsdl:input message="tns:GetMailingListContactsHttpGetIn" />
+            <wsdl:output message="tns:GetMailingListContactsHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="AddUser">
+            <wsdl:input message="tns:AddUserHttpGetIn" />
+            <wsdl:output message="tns:AddUserHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetGroups">
+            <wsdl:input message="tns:GetGroupsHttpGetIn" />
+            <wsdl:output message="tns:GetGroupsHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetUsers">
+            <wsdl:input message="tns:GetUsersHttpGetIn" />
+            <wsdl:output message="tns:GetUsersHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="DeleteUser">
+            <wsdl:input message="tns:DeleteUserHttpGetIn" />
+            <wsdl:output message="tns:DeleteUserHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="CreateMailing">
+            <wsdl:input message="tns:CreateMailingHttpGetIn" />
+            <wsdl:output message="tns:CreateMailingHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetCompanyMode">
+            <wsdl:input message="tns:GetCompanyModeHttpGetIn" />
+            <wsdl:output message="tns:GetCompanyModeHttpGetOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetBalance">
+            <wsdl:input message="tns:GetBalanceHttpGetIn" />
+            <wsdl:output message="tns:GetBalanceHttpGetOut" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:portType name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APIHttpPost">
+        <wsdl:operation name="SendMessage">
+            <wsdl:input message="tns:SendMessageHttpPostIn" />
+            <wsdl:output message="tns:SendMessageHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageAtDate">
+            <wsdl:input message="tns:SendMessageAtDateHttpPostIn" />
+            <wsdl:output message="tns:SendMessageAtDateHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageWithValidityPeriod">
+            <wsdl:input message="tns:SendMessageWithValidityPeriodHttpPostIn" />
+            <wsdl:output message="tns:SendMessageWithValidityPeriodHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribers">
+            <wsdl:input message="tns:SendMessageToMultipleSubscribersHttpPostIn" />
+            <wsdl:output message="tns:SendMessageToMultipleSubscribersHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribersAtDate">
+            <wsdl:input message="tns:SendMessageToMultipleSubscribersAtDateHttpPostIn" />
+            <wsdl:output message="tns:SendMessageToMultipleSubscribersAtDateHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessages">
+            <wsdl:input message="tns:SendMessagesHttpPostIn" />
+            <wsdl:output message="tns:SendMessagesHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDate">
+            <wsdl:input message="tns:SendMessagesAtDateHttpPostIn" />
+            <wsdl:output message="tns:SendMessagesAtDateHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesWithValidityPeriod">
+            <wsdl:input message="tns:SendMessagesWithValidityPeriodHttpPostIn" />
+            <wsdl:output message="tns:SendMessagesWithValidityPeriodHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDateWithValidityPeriod">
+            <wsdl:input message="tns:SendMessagesAtDateWithValidityPeriodHttpPostIn" />
+            <wsdl:output message="tns:SendMessagesAtDateWithValidityPeriodHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMessageStatus">
+            <wsdl:input message="tns:GetMessageStatusHttpPostIn" />
+            <wsdl:output message="tns:GetMessageStatusHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMessagesStatus">
+            <wsdl:input message="tns:GetMessagesStatusHttpPostIn" />
+            <wsdl:output message="tns:GetMessagesStatusHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMessages">
+            <wsdl:input message="tns:GetMessagesHttpPostIn" />
+            <wsdl:output message="tns:GetMessagesHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetStatistics">
+            <wsdl:input message="tns:GetStatisticsHttpPostIn" />
+            <wsdl:output message="tns:GetStatisticsHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingLists">
+            <wsdl:input message="tns:GetMailingListsHttpPostIn" />
+            <wsdl:output message="tns:GetMailingListsHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="DeleteMailingLists">
+            <wsdl:input message="tns:DeleteMailingListsHttpPostIn" />
+            <wsdl:output message="tns:DeleteMailingListsHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingListContacts">
+            <wsdl:input message="tns:GetMailingListContactsHttpPostIn" />
+            <wsdl:output message="tns:GetMailingListContactsHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="AddUser">
+            <wsdl:input message="tns:AddUserHttpPostIn" />
+            <wsdl:output message="tns:AddUserHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetGroups">
+            <wsdl:input message="tns:GetGroupsHttpPostIn" />
+            <wsdl:output message="tns:GetGroupsHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetUsers">
+            <wsdl:input message="tns:GetUsersHttpPostIn" />
+            <wsdl:output message="tns:GetUsersHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="DeleteUser">
+            <wsdl:input message="tns:DeleteUserHttpPostIn" />
+            <wsdl:output message="tns:DeleteUserHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="CreateMailing">
+            <wsdl:input message="tns:CreateMailingHttpPostIn" />
+            <wsdl:output message="tns:CreateMailingHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetCompanyMode">
+            <wsdl:input message="tns:GetCompanyModeHttpPostIn" />
+            <wsdl:output message="tns:GetCompanyModeHttpPostOut" />
+        </wsdl:operation>
+        <wsdl:operation name="GetBalance">
+            <wsdl:input message="tns:GetBalanceHttpPostIn" />
+            <wsdl:output message="tns:GetBalanceHttpPostOut" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APISoap" type="tns:MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APISoap">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="SendMessage">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/SendMessage" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageAtDate">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/SendMessageAtDate" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageWithValidityPeriod">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/SendMessageWithValidityPeriod" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribers">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/SendMessageToMultipleSubscribers" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribersAtDate">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/SendMessageToMultipleSubscribersAtDate" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessages">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/SendMessages" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDate">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/SendMessagesAtDate" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesWithValidityPeriod">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/SendMessagesWithValidityPeriod" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDateWithValidityPeriod">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/SendMessagesAtDateWithValidityPeriod" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendVariousMessages">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/SendVariousMessages" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessageStatus">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/GetMessageStatus" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessagesStatus">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/GetMessagesStatus" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessages">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/GetMessages" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetStatistics">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/GetStatistics" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="CreateMailingList">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/CreateMailingList" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingLists">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/GetMailingLists" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteMailingLists">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/DeleteMailingLists" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingListContacts">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/GetMailingListContacts" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SetMailingListContacts">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/SetMailingListContacts" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="AddUser">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/AddUser" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetGroups">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/GetGroups" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetUsers">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/GetUsers" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteUser">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/DeleteUser" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="CreateMailing">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/CreateMailing" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetCompanyMode">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/GetCompanyMode" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetBalance">
+            <soap:operation soapAction="http://mcommunicator.ru/M2M/GetBalance" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APISoap12" type="tns:MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APISoap">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="SendMessage">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/SendMessage" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageAtDate">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/SendMessageAtDate" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageWithValidityPeriod">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/SendMessageWithValidityPeriod" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribers">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/SendMessageToMultipleSubscribers" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribersAtDate">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/SendMessageToMultipleSubscribersAtDate" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessages">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/SendMessages" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDate">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/SendMessagesAtDate" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesWithValidityPeriod">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/SendMessagesWithValidityPeriod" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDateWithValidityPeriod">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/SendMessagesAtDateWithValidityPeriod" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendVariousMessages">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/SendVariousMessages" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessageStatus">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/GetMessageStatus" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessagesStatus">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/GetMessagesStatus" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessages">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/GetMessages" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetStatistics">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/GetStatistics" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="CreateMailingList">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/CreateMailingList" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingLists">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/GetMailingLists" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteMailingLists">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/DeleteMailingLists" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingListContacts">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/GetMailingListContacts" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SetMailingListContacts">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/SetMailingListContacts" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="AddUser">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/AddUser" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetGroups">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/GetGroups" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetUsers">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/GetUsers" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteUser">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/DeleteUser" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="CreateMailing">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/CreateMailing" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetCompanyMode">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/GetCompanyMode" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetBalance">
+            <soap12:operation soapAction="http://mcommunicator.ru/M2M/GetBalance" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APIHttpGet" type="tns:MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APIHttpGet">
+        <http:binding verb="GET" />
+        <wsdl:operation name="SendMessage">
+            <http:operation location="/SendMessage" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageAtDate">
+            <http:operation location="/SendMessageAtDate" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageWithValidityPeriod">
+            <http:operation location="/SendMessageWithValidityPeriod" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribers">
+            <http:operation location="/SendMessageToMultipleSubscribers" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribersAtDate">
+            <http:operation location="/SendMessageToMultipleSubscribersAtDate" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessages">
+            <http:operation location="/SendMessages" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDate">
+            <http:operation location="/SendMessagesAtDate" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesWithValidityPeriod">
+            <http:operation location="/SendMessagesWithValidityPeriod" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDateWithValidityPeriod">
+            <http:operation location="/SendMessagesAtDateWithValidityPeriod" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessageStatus">
+            <http:operation location="/GetMessageStatus" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessagesStatus">
+            <http:operation location="/GetMessagesStatus" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessages">
+            <http:operation location="/GetMessages" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetStatistics">
+            <http:operation location="/GetStatistics" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingLists">
+            <http:operation location="/GetMailingLists" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteMailingLists">
+            <http:operation location="/DeleteMailingLists" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output />
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingListContacts">
+            <http:operation location="/GetMailingListContacts" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="AddUser">
+            <http:operation location="/AddUser" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetGroups">
+            <http:operation location="/GetGroups" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetUsers">
+            <http:operation location="/GetUsers" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteUser">
+            <http:operation location="/DeleteUser" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output />
+        </wsdl:operation>
+        <wsdl:operation name="CreateMailing">
+            <http:operation location="/CreateMailing" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output />
+        </wsdl:operation>
+        <wsdl:operation name="GetCompanyMode">
+            <http:operation location="/GetCompanyMode" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetBalance">
+            <http:operation location="/GetBalance" />
+            <wsdl:input>
+                <http:urlEncoded />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APIHttpPost" type="tns:MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APIHttpPost">
+        <http:binding verb="POST" />
+        <wsdl:operation name="SendMessage">
+            <http:operation location="/SendMessage" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageAtDate">
+            <http:operation location="/SendMessageAtDate" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageWithValidityPeriod">
+            <http:operation location="/SendMessageWithValidityPeriod" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribers">
+            <http:operation location="/SendMessageToMultipleSubscribers" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessageToMultipleSubscribersAtDate">
+            <http:operation location="/SendMessageToMultipleSubscribersAtDate" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessages">
+            <http:operation location="/SendMessages" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDate">
+            <http:operation location="/SendMessagesAtDate" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesWithValidityPeriod">
+            <http:operation location="/SendMessagesWithValidityPeriod" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessagesAtDateWithValidityPeriod">
+            <http:operation location="/SendMessagesAtDateWithValidityPeriod" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessageStatus">
+            <http:operation location="/GetMessageStatus" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessagesStatus">
+            <http:operation location="/GetMessagesStatus" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMessages">
+            <http:operation location="/GetMessages" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetStatistics">
+            <http:operation location="/GetStatistics" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingLists">
+            <http:operation location="/GetMailingLists" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteMailingLists">
+            <http:operation location="/DeleteMailingLists" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output />
+        </wsdl:operation>
+        <wsdl:operation name="GetMailingListContacts">
+            <http:operation location="/GetMailingListContacts" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="AddUser">
+            <http:operation location="/AddUser" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetGroups">
+            <http:operation location="/GetGroups" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetUsers">
+            <http:operation location="/GetUsers" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteUser">
+            <http:operation location="/DeleteUser" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output />
+        </wsdl:operation>
+        <wsdl:operation name="CreateMailing">
+            <http:operation location="/CreateMailing" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output />
+        </wsdl:operation>
+        <wsdl:operation name="GetCompanyMode">
+            <http:operation location="/GetCompanyMode" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetBalance">
+            <http:operation location="/GetBalance" />
+            <wsdl:input>
+                <mime:content type="application/x-www-form-urlencoded" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:mimeXml part="Body" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_API">
+        <wsdl:port name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APISoap" binding="tns:MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APISoap">
+            <soap:address location="https://api.mcommunicator.ru/m2m/m2m_api.asmx" />
+        </wsdl:port>
+        <wsdl:port name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APISoap12" binding="tns:MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APISoap12">
+            <soap12:address location="https://api.mcommunicator.ru/m2m/m2m_api.asmx" />
+        </wsdl:port>
+        <wsdl:port name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APIHttpGet" binding="tns:MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APIHttpGet">
+            <http:address location="https://api.mcommunicator.ru/m2m/m2m_api.asmx" />
+        </wsdl:port>
+        <wsdl:port name="MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APIHttpPost" binding="tns:MTS_x0020_Communicator_x0020_M2M_x0020_XML_x0020_APIHttpPost">
+            <http:address location="https://api.mcommunicator.ru/m2m/m2m_api.asmx" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

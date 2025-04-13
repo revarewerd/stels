@@ -1,0 +1,20 @@
+[Unit]
+Description=Wayrecall packet receiver
+PartOf=wayrecall.service
+After=wayrecall.service
+
+[Service]
+EnvironmentFile=/etc/environment
+WorkingDirectory=/opt/wayrecall
+ExecStart=/usr/bin/java -Xmx2048m -XX:MaxHeapFreeRatio=30 -XX:MinHeapFreeRatio=15 -XX:+HeapDumpOnOutOfMemoryError \
+            -XX:HeapDumpPath=/opt/wayrecall/receiver-oomhd.hprof \
+            -Dlog4j2.formatMsgNoLookups=true \
+            -Dlogback.configurationFile=/opt/wayrecall/conf/packreceiver-logback.xml \
+            -jar /opt/wayrecall/bin/packreceiver.jar receiverserver
+User=wayrecall
+Type=simple
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=wayrecall.service

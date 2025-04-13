@@ -1,0 +1,55 @@
+1	Digital_Input_Status_1	1
+2	Digital_Input_Status_2	1
+3	Digital_Input_Status_3	1
+4	Digital_Input_Status_4	1
+9	Analog_Input_1	2
+10	Analog_Input_2	2
+11	Analog_Input_3	2
+19	Analog_Input_4	2
+21	GSM_signal_level	1
+22	Actual_profile	1
+24	Speedometer	2
+50	Digital_Output_Status_3	1
+51	Digital_Output_Status_4	1
+66	External_Power_Voltage	2
+67	Internal_Battery_Voltage	2
+68	Internal_Battery_Current	2
+70	PCB_Temperature	4
+71	GNSS_status	1
+72	Dallas_Temperature_1	4
+73	Dallas_Temperature_2	4
+74	Dallas_Temperature_3	4
+76	Fuel_Counter	4
+78	iButton_Input	8
+179	Digital_output_1_state	1
+180	Digital_output_2_state	1
+181	PDOP	2
+182	HDOP	2
+199	Odometer	4
+200	Deep_Sleep	1
+205	Cell_ID	2
+206	Area_Code	2
+240	Movement	1
+241	Current_Operator_Code	4
+140	CAN_0
+141	CAN_1
+142	CAN_2
+143	CAN_3
+144	CAN_4
+145	CAN_5
+146	CAN_6
+147	CAN_7
+148	CAN_8
+149	CAN_9
+150	CAN_10
+151	CAN_11
+152	CAN_12
+153	CAN_13
+150	CAN_10
+155	Geofence_zone_01
+156	Geofence_zone_02
+157	Geofence_zone_03
+158	Geofence_zone_04
+159	Geofence_zone_05
+160	Geofence_zone_06
+239	ignition

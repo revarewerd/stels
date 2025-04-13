@@ -1,0 +1,41 @@
+instance.defaultmongodb.databaseName={{ item.mongo.name }}
+instance.defaultmongodb.servers={{ mongo_hosts | join(', ') }}
+instance.defaultmongodb.port=27017
+instance.defaultmongodb.waitTime={{ item.mongo.waitTime | default(wrcinstance_defaults.mongo.waitTime) }}
+instance.defaultmongodb.connectionsPerHost={{ item.mongo.connectionsPerHost | default(wrcinstance_defaults.mongo.connectionsPerHost) }}
+instance.gpsnotoficator.poolSize={{ item.mongo.poolSize | default(wrcinstance_defaults.mongo.poolSize) }}
+instance.gpsnotoficator.poolSizeMax ={{ item.mongo.poolSizeMax | default(wrcinstance_defaults.mongo.poolSizeMax) }}
+{% if item.external.onesignal is defined %}
+instance.onesignal.id = {{ item.external.onesignal.id | default(wrcinstance_defaults.external.onesignal.id) }}
+instance.onesignal.restKey = {{ item.external.onesignal.restKey | default(wrcinstance_defaults.external.onesignal.restKey) }}
+{% endif %}
+
+{% if item.payment is defined %}
+instance.payment.port = {{ item.payment.port| default(wrcinstance_defaults.payment.port) }}
+instance.payment.shopId = {{ item.payment.shopId | default(wrcinstance_defaults.payment.shopId) }}
+instance.payment.scId = {{ item.payment.scId | default(wrcinstance_defaults.payment.scId) }}
+instance.payment.shopPassword = {{ item.payment.shopPassword | default(wrcinstance_defaults.payment.shopPassword) }}
+instance.payment.paymentServerUrl={{ item.payment.paymentServerUrl | default(wrcinstance_defaults.payment.paymentServerUrl) }}
+{% else %}
+instance.payment.port = -1
+{% endif %}
+instance.name={{ item.name }}
+{% if item.parent is defined %}
+instance.parent={{ item.parent }}
+{% endif %}
+{% if item.homesite is defined %}
+instance.homesite={{ item.homesite }}
+{% endif %}
+{% if item.yandex_maps is defined %}
+instance.yandex-maps={{ item.yandex_maps | lower }}
+{% endif %}
+{% if item.google_maps is defined or wrcinstance_defaults.google_maps is defined %}
+instance.google-maps={{ item.google_maps | default(wrcinstance_defaults.google_maps) | lower }}
+{% endif %}
+{% if item.m2mSmsGate is defined %}
+instance.m2mSmsGate.enabled={{ item.m2mSmsGate }}
+{% endif %}
+{% if item.external.mtsmarketolog is defined or wrcinstance_defaults.external.mtsmarketolog.login %}
+instance.mtsmarketolog.login = {{ item.external.mtsmarketolog.login | default(wrcinstance_defaults.external.mtsmarketolog.login) }}
+instance.mtsmarketolog.password = {{ item.external.mtsmarketolog.password | default(wrcinstance_defaults.external.mtsmarketolog.password) }}
+{% endif %}

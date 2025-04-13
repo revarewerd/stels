@@ -1,0 +1,3 @@
+{% for item in item.admins %}
+{{ item.name }}={{ item.password }},{{ item.roles | default(wrcinstance_defaults.admins.roles) }},{{ item.enabled | default(wrcinstance_defaults.admins.enabled) }}
+{% endfor %}

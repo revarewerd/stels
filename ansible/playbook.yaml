@@ -1,0 +1,381 @@
+- hosts: [wrc_mongo, wrc_mongo_arb]
+  vars:
+    mongo_hosts: "{{ groups['wrc_mongo'] | map('extract', hostvars, 'internal_ip') | list }}"
+    mongo_arb: "{{ groups['wrc_mongo_arb'] | map('extract', hostvars, 'internal_ip') | first }}:30000"
+    mongo_is_replicated: "{{ (groups['wrc_mongo'] | length) > 1 }}"
+  tasks:
+    - name: Assert single arbiter
+      assert: { that: "(groups['wrc_mongo_arb'] | default([]) | length) <= 1", fail_msg: "should be only one 'wrc_mongo_arb'" }
+
+    - name: Install Docker
+      tags: [initialisation]
+      block:
+        - name: Add Docker GPG apt Key
+          apt_key:
+            url: https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg
+            state: present
+        - name: Add Docker Repository
+          apt_repository:
+            repo: deb https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
+            state: present
+        - name: Install docker-ce
+          apt: name=docker-ce state=latest
+        - name: install pip
+          apt: {name: python3-pip, state: latest}
+        - name: Install Docker Module for Python
+          pip: {name: docker}
+
+    - name: MongoDb In Docker
+      register: result
+      retries: 5
+      delay: 3
+      until: result is succeeded
+      docker_container:
+        name: "MongoDb"
+        image: "mongo:3.4"
+        state: started
+        restart_policy: always
+        volumes:
+          - "{{ data_mnt | default('/var/data') }}/mongodb:/data/db"
+          - "/var/data/mongodb/configdb:/data/configdb"
+        published_ports:
+          - "{{ internal_ip }}:27017:27017"
+          - "127.0.0.1:27017:27017"
+        command: mongod {% if mongo_is_replicated %} --replSet rs1 {% endif %}
+      when: "'wrc_mongo' in group_names"
+    - name: MongoDbArbiter In Docker
+      register: result
+      retries: 5
+      delay: 3
+      until: result is succeeded
+      docker_container:
+        name: "MongoDbArb"
+        image: "mongo:3.4"
+        state: started
+        restart_policy: always
+        volumes:
+          - "{{ data_mnt | default('/var/data') }}/mongodb/arb:/data/db"
+        published_ports:
+          - "{{ internal_ip }}:30000:27017"
+          - "127.0.0.1:30000:27017"
+        command: mongod {% if mongo_is_replicated %} --replSet rs1 {% endif %}
+      when: "mongo_is_replicated and ('wrc_mongo_arb' in group_names)"
+    - set_fact:
+        all_mongoes: "{{ (mongo_hosts + [ mongo_arb ]) | join(', ') }}"
+      when: mongo_is_replicated
+    - name: Install pymongo
+      tags: [initialisation]
+      pip: {name: pymongo}
+    - name: Ensure replicaset rs1 exists
+      mongodb_replicaset:
+        replica_set: rs1
+        members: "{{ all_mongoes }}"
+        arbiter_at_index: "{{ mongo_hosts | length }}"
+        validate: yes
+      when: mongo_is_replicated and (groups.wrc_mongo.index(inventory_hostname) == 0)
+
+- hosts: wrc_pg
+  roles:
+    - role: postgis
+  tasks:
+    - name: act as postgres
+      become_user: postgres
+      become: yes
+      block:
+        - name: Copy init script
+          copy:
+            src: ../monitoring/src/main/resources/ru/sosgps/wayrecall/monitoring/geozones.sql
+            dest: /tmp/geozones-init.sql
+        - name: Run init geozones
+          postgresql_query:
+            db: seniel-pg
+            path_to_script: /tmp/geozones-init.sql
+          changed_when: False
+        - name: Ensure seniel-pg is owener of geozones
+          postgresql_table:
+            db: seniel-pg
+            name: geozones
+            owner: "{{ pg_user }}"
+
+- hosts: wrc_server
+  vars:
+    mongo_hosts: "{{ groups['wrc_mongo'] | map('extract', hostvars, 'internal_ip') | list }}"
+    pg_instance: "{{ groups['wrc_pg'] | map('extract', hostvars) | list }}"
+    nominatim_instance: "{{ groups['wrc_nominatim'] | map('extract', hostvars) | list }}"
+  tasks:
+    - name: Install AdoptOpenJDK on Debian
+      tags: [ initialisation ]
+      when: ansible_distribution == 'Debian'
+      block:
+        - name: Add apt Key
+          apt_key:
+            url: https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
+            state: present
+        - name: add adopt repo
+          apt_repository:
+            repo: deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ {{ ansible_distribution_release }} stable
+            state: present
+        - name: install Java 8
+          apt:
+            name: adoptopenjdk-8-hotspot
+            state: latest
+    - name: install Java 8
+      tags: [initialisation]
+      apt:
+        name: openjdk-8-jdk
+        state: latest
+      when: ansible_distribution != 'Debian'
+
+    - name: install pgbouncer
+      tags: [initialisation]
+      apt: {name: pgbouncer, state: latest}
+
+    - name: Gen pgbouncer.ini
+      template:
+        src: templates/pgbouncer/pgbouncer.ini.j2
+        dest: /etc/pgbouncer/pgbouncer.ini
+      notify: ["restart pgbouncer"]
+
+    - name: Gen pgbouncer userlist.txt
+      template:
+        src: templates/pgbouncer/userlist.txt.j2
+        dest: /etc/pgbouncer/userlist.txt
+      notify: ["restart pgbouncer"]
+
+    - name: Add user Wayrecall-static
+      tags: [ initialisation ]
+      user: { name: "wayrecall-static", home: "/opt/wayrecall" }
+    - name: Add user Wayrecall
+      tags: [initialisation]
+      user: {name: "wayrecall", home: "/opt/wayrecall", shell: "/bin/bash" }
+    - name: Make ansible_user friend of wayrecall
+      tags: [initialisation]
+      user: {name: "{{ ansible_user }}", groups: "wayrecall-static,wayrecall", append: "yes"}
+        
+    - name: Make wayrecall readble dir
+      tags: [ initialisation ]
+      file: { path: "{{ item }}", state: directory, mode: 'u=rwx,g=rwx,o=rx', owner: "wayrecall-static", group: "wayrecall-static" }
+      with_items:
+        - /opt/wayrecall
+        - /opt/wayrecall/bin
+        - /opt/wayrecall/conf
+        - /opt/wayrecall/conf/localizations
+        - /opt/wayrecall/conf/wrcinstances/
+        - /opt/wayrecall/reports
+
+    - name: Make wayrecall writabledirs
+      tags: [initialisation]
+      file: {path: "{{ item }}", state: directory, mode: 'u=rwx,g=rwx,o=rx', owner: wayrecall, group: wayrecall}
+      with_items:
+        - /opt/wayrecall/security
+        - /opt/wayrecall/logs
+        - /opt/wayrecall/inclog
+        - /opt/wayrecall/packreceiver-logs
+        - /opt/wayrecall/osmTilesCache
+        - /opt/wayrecall/odsmosrutempStore
+        - /opt/wayrecall/.deegree
+        - /opt/wayrecall/ruptelacfg
+
+    - name: Define WAYRECALL_HOME and ThirdPartyJS env
+      tags: [initialisation]
+      lineinfile: {path: /etc/environment, line: "{{ item }}" }
+      with_items:
+        - 'WAYRECALL_HOME=/opt/wayrecall'
+        - 'ThirdPartyJS=/opt/wayrecall/ThirdPartyJS'
+
+    - name: Check ThirdPartyJS exists
+      tags: [initialisation]
+      find: paths=/opt/wayrecall/ThirdPartyJS file_type=directory
+      register: dir_files
+    - name: Download ThirdPartyJS
+      tags: [initialisation]
+      when: dir_files.matched|int == 0
+      unarchive:
+        src: "http://maven.uits-labs.ru/ru/sosgps/wayrecall/ThirdPartyJS.txz"
+        dest: /opt/wayrecall/
+        owner: wayrecall-static
+        remote_src: yes
+
+    - name: Copy Wayrecall conf
+      tags: [config]
+      synchronize:
+        src: "{{ inventory_dir }}/prod-conf/"
+        dest: /opt/wayrecall/conf/
+        delete: no
+        perms: false
+        rsync_path: rsync
+        rsync_opts: ["--omit-dir-times", "--chown=wayrecall-static:wayrecall-static", "--chmod=D0775,F0664", "--exclude={'localizations'}"]
+
+    - name: Make wrcinstances dirs
+      tags: [config]
+      file: {path: "/opt/wayrecall/conf/wrcinstances/{{ item }}", state: directory, mode: 'u=rwx,g=rwx,o=rx', owner: wayrecall-static, group: wayrecall-static}
+      with_items: "{{ wrcinstances_data | map(attribute='name') | list }}"
+    - name: Make retranslators dirs
+      tags: [config]
+      file: { path: "/opt/wayrecall/conf/wrcinstances/{{ item }}/retranslators", state: directory, mode: 'u=rwx,g=rwx,o=rx', owner: wayrecall, group: wayrecall-static }
+      with_items: "{{ wrcinstances_data | map(attribute='name') | list }}"
+    - name: Collect wrcinstances files on server
+      tags: [config]
+      shell: ls -1 /opt/wayrecall/conf/wrcinstances
+      register: wrcinstances_ls
+      changed_when: False
+    - name: Remove old wrcinstances
+      tags: [config]
+      file: path=/opt/wayrecall/conf/wrcinstances/{{ item }} state=absent
+      with_items: "{{ wrcinstances_ls.stdout_lines }}"
+      when: item not in (wrcinstances_data | map(attribute='name') | list)
+
+    - name: Gen global.properties
+      tags: [config]
+      template:
+        src: templates/global.properties.j2
+        dest: /opt/wayrecall/conf/global.properties
+        owner: wayrecall-static
+        group: wayrecall-static
+        mode: 0664
+      notify: ["restart packreceiver", "restart wayrecall"]
+
+    - name: Gen packreceiver.properties
+      tags: [config]
+      template:
+        src: templates/packreceiver.properties.j2
+        dest: /opt/wayrecall/conf/packreceiver.properties
+        owner: wayrecall-static
+        group: wayrecall-static
+        mode: 0664
+      notify: ["restart packreceiver"]
+
+    - name: Gen wrcinstances instance.properties
+      tags: [config]
+      template:
+        src: templates/instance.properties.j2
+        dest: /opt/wayrecall/conf/wrcinstances/{{ item['name'] }}/instance.properties
+        owner: wayrecall-static
+        group: wayrecall-static
+        mode: 0664
+        directory_mode: 0775
+      with_items: "{{ wrcinstances_data }}"
+      notify: ["restart wayrecall"]
+
+    - name: Gen wrcinstances billingAdmins.properties
+      tags: [config]
+      template:
+        src: templates/billingAdmins.properties.j2
+        dest: /opt/wayrecall/conf/wrcinstances/{{ item['name'] }}/billingAdmins.properties
+        owner: wayrecall-static
+        group: wayrecall-static
+        mode: 0664
+        directory_mode: 0775
+      with_items: "{{ wrcinstances_data }}"
+      notify: ["restart wayrecall"]
+
+    - name: Gen wrcinstances vhosts
+      tags: [config]
+      copy:
+        content: "{{ item.hosts | join('\n') }}"
+        dest: /opt/wayrecall/conf/wrcinstances/{{ item['name'] }}/vhosts
+        owner: wayrecall-static
+        group: wayrecall-static
+        mode: 0664
+        directory_mode: 0775
+      with_items: "{{ wrcinstances_data }}"
+      notify: ["restart wayrecall"]
+
+    - name: Copy wrcinstances additional data
+      tags: [config]
+      synchronize:
+        src: "{{ inventory_dir }}/wrc-instances-additional-files/{{ item.name }}"
+        dest: /opt/wayrecall/conf/wrcinstances/{{ item.name }}/
+        delete: no
+        perms: false
+        rsync_path: rsync
+        rsync_opts:
+          - "--omit-dir-times"
+          - "--chown=wayrecall:wayrecall"
+          - "--chmod=D0775,F0664"
+          - "--ignore-missing-args"
+      with_items: "{{ wrcinstances_data }}"
+      notify: ["restart wayrecall"]
+
+    - name: Upload Wayrecall binaries
+      tags: [deploy]
+      synchronize:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        delete: no
+        perms: false
+        rsync_path: rsync
+        rsync_opts: ["--omit-dir-times", "--chown=wayrecall-static:wayrecall-static", "--chmod=D0775,F0664"]
+      with_items:
+        - { src: "{{ lookup('env','WAYRECALL_HOME') }}/bin/libs", dest: '/opt/wayrecall/bin/' }
+        - { src: '../monitoring/target/dist/billingwebapp', dest: '/opt/wayrecall/bin' }
+        - { src: '../monitoring/target/dist/monitoringwebapp', dest: '/opt/wayrecall/bin' }
+        - { src: '../monitoring/target/dist/workflowapp', dest: '/opt/wayrecall/bin' }
+        - { src: '../monitoring/target/dist/monitoring.jar', dest: '/opt/wayrecall/bin' }
+        - { src: '../packreceiver/target/packreceiver.jar', dest: '/opt/wayrecall/bin' }
+        - { src: '../modules/odsmosru/target/odsmosru.jar', dest: '/opt/wayrecall/bin' }
+        - { src: '../tools/target/dist/tools.jar', dest: '/opt/wayrecall/bin' }
+        - { src: '../conf/localizations/', dest: '/opt/wayrecall/conf/localizations/' }
+        - { src: '../reports/', dest: '/opt/wayrecall/reports/' }
+        - { src: '../server-scripts/', dest: '/opt/wayrecall/bin/scripts' }
+      notify: ["restart packreceiver", "restart wayrecall"]
+
+    - name: Setup systemd.services
+      tags: [initialisation]
+      copy:
+        src: systemd-definitions/{{ item }}
+        dest: /etc/systemd/system/{{ item }}
+      with_items:
+        - odsmosru.service
+        - packreceiver.service
+        - wayrecall-web.service
+        - wayrecall.service
+      notify:
+        - reload systemd
+    - meta: flush_handlers
+    - name: Start wayrecall.service
+      systemd:
+        name: wayrecall.service
+        state: started
+        enabled: yes
+
+    - name: install iptables-persistent
+      package: name=iptables-persistent state=latest
+      tags: [initialisation]
+    - name: Forward port 80 to 9080
+      tags: [initialisation]
+      iptables:
+        table: nat
+        chain: PREROUTING
+        protocol: tcp
+        match: tcp
+        destination_port: "80"
+        jump: REDIRECT
+        to_ports: "9080"
+        comment: Redirect web traffic to port 9080
+      notify: ["save iptables"]
+    - name: Forward port 443 to 9081
+      tags: [initialisation]
+      iptables:
+        table: nat
+        chain: PREROUTING
+        protocol: tcp
+        match: tcp
+        destination_port: "443"
+        jump: REDIRECT
+        to_ports: "9081"
+        comment: Redirect https traffic to port 9081
+      notify: ["save iptables"]
+
+  handlers:
+    - name: reload systemd
+      command: systemctl daemon-reload
+    - name: restart pgbouncer
+      command: systemctl restart pgbouncer
+    - name: restart packreceiver
+      command: systemctl restart packreceiver
+    - name: restart wayrecall
+      command: systemctl restart wayrecall
+    - name: save iptables
+      shell: iptables-save > /etc/iptables/rules.v4
+

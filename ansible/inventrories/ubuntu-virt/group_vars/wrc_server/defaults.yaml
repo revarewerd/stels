@@ -1,0 +1,16 @@
+wrcinstance_defaults:
+  mongo:
+    waitTime: 10000
+    connectionsPerHost: 2
+    poolSize: 1
+    poolSizeMax: 1
+  admins:
+    roles: "ROLE_USER,ROLE_ADMIN,admin,AccountView,AccountCreate,AccountDataSet,AccountDelete,ObjectView,ObjectCreate,ObjectDataSet,ObjectDelete,EquipmentView,EquipmentCreate,EquipmentDataSet,EquipmentDelete,UserView,UserCreate,UserDelete,UserDataSet,EquipmentTypesView,EquipmentTypesCreate,EquipmentTypesDataSet,EquipmentTypesDelete,TariffPlanView,TariffPlanCreate,TariffPlanDataSet,TariffPlanDelete,ChangePermissions,ChangeRoles,ChangeBalance,Manager,Installer,ObjectRemove,EquipmentRemove,ObjectRestore,EquipmentRestore,DealerBackdoor"
+    enabled: "enabled"
+  payment:
+    port: 9091
+    shopId: 75279
+    scId: 543242
+    shopPassword: rekvizity7719648964
+    paymentServerUrl: https://demomoney.yandex.ru/eshop.xml
+  google_maps: false

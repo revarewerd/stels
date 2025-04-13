@@ -1,0 +1,34 @@
+wrcinstances_data:
+  - name: "default"
+    hosts: ["127.0.0.1", "wrc-dev1.yc", "localhost", "wayrecall.ksb-stels.ru:9080", "wayrecall.ksb-stels.ru"]
+    mongo:
+      name: "Seniel-dev2"
+      connectionsPerHost: 16
+      poolSize: 4
+      poolSizeMax: 4
+    admins:
+      - {name: kadmin, password: kadmin}
+    payment:
+
+  - name: "3gprotex"
+    hosts: ["3gprotex.ksb-stels.ru", "www.3gprotex.ksb-stels.ru"]
+    homesite: http://www.3gprotex.com/
+    parent: "default"
+    m2mSmsGate: "false"
+    mongo:
+      name: "Seniel-3gprotex"
+      connectionsPerHost: 4
+      poolSize: 4
+      poolSizeMax: 4
+    admins: [{name: 3gprotex, password: 3gprotex}]
+
+  - name: "Hittele"
+    hosts: ["ubuntu-virt"]
+    homesite: http://www.3gprotex.com/
+    m2mSmsGate: "false"
+    mongo:
+      name: "Seniel-hittele"
+      connectionsPerHost: 4
+      poolSize: 4
+      poolSizeMax: 4
+    admins: [{name: admin, password: admin}]

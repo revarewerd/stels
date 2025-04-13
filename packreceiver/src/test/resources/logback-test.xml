@@ -1,0 +1,91 @@
+<configuration debug="false">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+     ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>packreceiver-logs/main-${bySecond}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>packreceiver-logs/main-${bySecond}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="REGEO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>packreceiver-logs/regeo-${bySecond}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>packreceiver-logs/regeo-${bySecond}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>1MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="INSERTER_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>packreceiver-logs/inserter-${bySecond}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>packreceiver-logs/inserter-${bySecond}.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="ru.sosgps" level="debug"/>
+    <logger name="ru.sosgps.wayrecall.avlprotocols.navtelecom" level="trace"/>
+
+    <!--<logger name="ru.sosgps.wayrecall.processing.lazyseq.DistanceAggregator" level="trace"/>-->
+    <!--<logger name="ru.sosgps.wayrecall.processing.LazySeqAccumilatedParamsProcessor" level="trace"/>-->
+    <!--<logger name="ru.sosgps.wayrecall.processing.lazyseq.GpsIntervalSplitter" level="trace"/>-->
+
+
+
+    <!--<logger name="ru.sosgps.wayrecall.avlprotocols.ruptela" level="debug" additivity="false">-->
+        <!--<appender-ref ref="INSERTER_FILE"/>-->
+    <!--</logger>       -->
+
+
+    <logger name="ru.sosgps.wayrecall.regeocoding.ReGeocoder" level="info" additivity="false">
+        <appender-ref ref="REGEO_FILE"/>
+    </logger>
+
+    <logger name="ru.sosgps.wayrecall.regeocoding.ReGeocoderRunner" level="debug" additivity="false">
+        <appender-ref ref="REGEO_FILE"/>
+    </logger>
+
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

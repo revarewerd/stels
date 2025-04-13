@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
+    <title>Мониторинг</title>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
+    <link rel="stylesheet" type="text/css" href="extjs-4.2.1/resources/css/ext-all-gray-debug.css">
+    <script type="text/javascript" src="EDS/localization.js"></script>
+    <script type="text/javascript">
+        var res = /(?:^isMobileVersion|;\s*isMobileVersion)=(.*?)(?:;|$)/g.exec(document.cookie);
+        if (res && res[1] === 'true') {
+            window.location = '/mobile.html';
+        } else if (res === null) {
+            var isMobileDevice = navigator.userAgent.match(/mobi|tablet|iPad|iPhone|iPod|webOS|BlackBerry|Android/i) !== null || screen.width <= 480;
+            var isFromMobiPage = (document.referrer && (document.referrer.search('mobile') !== -1))?true:false;
+            if (isMobileDevice && !isFromMobiPage) {
+                window.location = '/mobile.html';
+            }
+        }
+        document.title = tr('main.monitoring');
+
+        {% if properties["instance.google-maps"] == "false" %}
+        window.forbidGoogleMaps = true;
+        {% endif %}
+
+    </script>
+    <script type="text/javascript" src="predef.js"></script>
+    <script type="text/javascript"  src="moment/moment-with-locales.js"></script>
+    <script type="text/javascript"  src="moment/moment-timezone-with-data.js"></script>
+    {# <!-- Maps support--> #}
+    {# <!--<script src="http://maps.google.com/maps/api/js?v=3.7&amp;sensor=false"></script>--> #}
+    <script type="text/javascript" src="EDS/localization/GoogleAPI"></script>
+    {# <!--<script type="text/javascript" src="EDS/localization/YandexAPI"></script>--> #}
+
+    {# <!--<script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>--> #}
+    {# <!--<script type="text/javascript" src='http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=abcdefg1234'></script>--> #}
+    <script type="text/javascript" src="openlayers/OpenLayers.js"></script>
+    {# <!--<script type="text/javascript" src="openlayers/lang/ru.js"></script>--> #}
+    <script type="text/javascript" src="EDS/localization/openlayers-lang.js"></script>
+    {# <!--[if IE]><script src="excanvas.js"></script><![endif]--> #}
+    <script type="text/javascript" src="dygraph-combined.js"></script>
+    <script type="text/javascript" src="extjs-4.2.1/ext-all-debug.js"></script>
+    <script type="text/javascript" src="EDS/logo/logodata.js"></script>
+    <script type="text/javascript" src="EDS/api-debug.js"></script>
+    {# <!--<script type="text/javascript" src="extjs-4.2.1/locale/ext-lang-ru.js"></script>--> #}
+    <script type="text/javascript" src="EDS/localization/ext-lang.js"></script>
+    <script type="text/javascript" src="accounting.js"></script>
+    {% if properties["instance.yandex-maps"] != "false" %}
+    <script src="https://api-maps.yandex.ru/1.0/index.xml" type="text/javascript"></script>
+    <script type="text/javascript" src="OL_Yandex.js"></script>
+    {% endif %}
+
+    <script type="text/javascript" src="Printer.js"></script>
+    <script type="text/javascript"  src="timezone.js"></script>
+    <script type="text/javascript">
+        accounting.settings = {
+            currency: {
+                symbol: " р.", // default currency symbol is '$'
+                format: "%v%s", // controls output: %s = symbol, %v = value/number (can be object: see below)
+                decimal: ",", // decimal point separator
+                thousand: " ", // thousands separator
+                precision: 2   // decimal places
+            },
+            number: {
+                precision: 0, // default precision on numbers is 0
+                thousand: " ",
+                decimal: ","
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        timeZone = -new Date().getTimezoneOffset();
+        var timeout = 3 * 60 * 1000;
+        Ext.override(Ext.grid.View, { enableTextSelection: true });
+        Ext.override(Ext.view.AbstractView, { 
+            loadingText: tr('main.loading')+'...'
+        });
+        Ext.override(Ext.menu.Menu, { 
+            hideMode: 'display'
+        });
+        Ext.override(Ext.data.Connection, {
+            timeout: timeout
+        });
+        Ext.override(Ext.data.proxy.Ajax, {
+            timeout: timeout
+        });
+        Ext.override(Ext.form.field.Date, {
+            startDay: 1
+        });
+        Ext.override(Ext.picker.Date, {
+            startDay: 1
+        });
+        Ext.override(Ext.selection.Model, {
+            storeHasSelected: function(record) {
+                var store = this.store,
+                    records,
+                    len, id, i, m;
+
+                if (record.hasId()) {
+                    return store.getById(record.getId());
+                } else {
+                    if (store.buffered) {//on buffered stores the map holds the data items
+                        records = [];
+                        for (m in store.data.map) {
+                            records = records.concat(store.data.map[m].value);
+                        }
+                    } else {
+                        records = store.data.items;
+                    }
+                    len = records.length;
+                    id = record.internalId;
+
+
+                    for (i = 0; i < len; ++i) {
+                        if (id === records[i].internalId) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+        Ext.override(Ext.grid.RowEditor, {
+            saveBtnText : tr('main.ok'),
+            cancelBtnText : tr('main.cancel'),
+            errorsText :  tr('main.error'),
+            dirtyText :  tr('main.mustsave')
+        });
+    </script>
+    <script type="text/javascript" src="app.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body></body>
+</html>

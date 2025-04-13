@@ -1,0 +1,51 @@
+- name: Debian Positres version
+  include_vars: buster.yaml
+  when: ansible_distribution_release == "buster"
+- name: Install postgresql
+  apt: {name: "postgresql-{{ postgres_version }}", state: latest, update_cache: yes, cache_valid_time: 3600}
+#    - name: Install postgis
+#      apt: {name: postgis, state: latest}
+- name: Install postgis-scripts
+  apt: {name: "postgresql-{{ postgres_version }}-postgis-{{ postgis_version }}", state: latest}
+- name: Install postgis-scripts
+  apt: {name: "postgresql-{{ postgres_version }}-postgis-{{ postgis_version }}-scripts", state: latest}
+- name: Install libpq-dev for psycopg2
+  apt: {name: libpq-dev, state: latest}
+- name: install pip
+  apt: {name: python3-pip, state: latest}
+- name: install setfacl support
+  become: yes
+  apt: pkg=acl
+- name: Install psycopg2 for ansible handle postgres
+  pip: {name: psycopg2-binary}
+- name: act as postgres
+  become_user: postgres
+  become: yes
+  block:
+  - name: Create seniel-pg User
+    postgresql_user:
+      name: "{{ pg_user }}"
+      password: "{{ pg_password }}"
+  - name: Create seniel-pg Database
+    postgresql_db:
+      name: seniel-pg
+      owner: "{{ pg_user }}"
+      encoding: UTF-8
+  - name: Enable postgis
+    postgresql_ext:
+      name: postgis
+      db: seniel-pg
+      state: present
+  - name: Grant users permissions.
+    postgresql_pg_hba:
+      dest: /etc/postgresql/{{ postgres_version }}/main/pg_hba.conf
+      contype: host
+      users: "{{ pg_user }}"
+      source: all #TODO
+      databases: seniel-pg
+      method: md5
+  - name: Set listen internal_ip
+    postgresql_set:
+      name: listen_addresses
+      value: "localhost, {{ internal_ip }}"
+    notify: ["restart postgresql"]

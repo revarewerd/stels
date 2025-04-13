@@ -1,0 +1,292 @@
+<html>
+<head>
+    <title>Биллинг</title>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <style type="text/css">
+        DIV:hover.ballink {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /*.event-tree-panel .x-tree-icon-parent {*/
+            /*background-image: url("http://probablyprogramming.com/wp-content/uploads/2009/03/handtinyblack.gif") !important;*/
+        /*}*/
+
+        /*.event-tree-panel .x-tree-icon-leaf {*/
+            /*background-image: url("http://probablyprogramming.com/wp-content/uploads/2009/03/handtinyblack.gif") !important;*/
+        /*}*/
+        .actionimgs img {
+            cursor: pointer;
+        }
+        .grayedText {
+            color: #a9a9a9;
+        }        
+        .redText .x-grid-cell {
+            background-color: #ffe2e2 !important;        
+        }
+        .yellowText .x-grid-cell {
+            background-color: #fffacd !important;
+        }
+        .mousepointer { 
+            cursor: pointer; 
+        }
+    </style>
+    <script type="text/javascript" src="predef.js"></script>
+    <script type="text/javascript">
+        if (!window.setImmediate) window.setImmediate = (function(){
+            var head = { }, tail = head; // очередь вызовов, 1-связный список
+            var ID = Math.random(); // уникальный идентификатор
+            function onmessage(e){
+                if (e.data != ID) return; // не наше сообщение
+                head = head.next;
+                var func = head.func;
+                delete head.func;
+                func();
+            }
+
+            if (window.addEventListener) { // IE9+, другие браузеры
+                window.addEventListener('message', onmessage, false);
+            } else { // IE8
+                window.attachEvent('onmessage', onmessage);
+            }
+
+            return window.postMessage ? function(func){
+                tail = tail.next = { func: func };
+                window.postMessage(ID, "*");
+            } : function(func){ // IE<8
+                setTimeout(func, 0);
+            };
+        }());
+
+    </script>
+    <link rel="stylesheet" type="text/css" href="extjs-4.2.1/resources/css/ext-all-gray.css">
+    <script type="text/javascript" src="javascript/atmosphere.js"></script>
+    <script type="text/javascript" src="accounting.js"></script>
+    <script type="text/javascript">
+        accounting.settings = {
+            currency: {
+                symbol: " р.", // default currency symbol is '$'
+                format: "%v%s", // controls output: %s = symbol, %v = value/number (can be object: see below)
+                decimal: ".", // decimal point separator
+                thousand: " ", // thousands separator
+                precision: 2   // decimal places
+            },
+            number: {
+                precision: 0, // default precision on numbers is 0
+                thousand: ",",
+                decimal: "."
+            }
+        }
+    </script>
+    <script type="text/javascript" src="extjs-4.2.1/ext-all-debug.js"></script>
+    <!--<script type="text/javascript" src="extjs-4.2.1/ext-debug.js"></script>-->
+    <script type="text/javascript" src="EDS/api-debug.js"></script>
+    <script type="text/javascript">
+        Ext.override(Ext.form.field.TextArea, {
+    setCaretPosition: function(pos, dir) {
+        var el = this.inputEl.dom;
+        if (typeof (el.selectionStart) === "number") {
+            el.focus();
+
+            if (el.selectionStart == 0 && el.selectionEnd != el.selectionStart && el.selectionEnd == el.value.length) {
+                if (dir == "left") {
+                    el.setSelectionRange(el.selectionEnd, el.selectionEnd);
+                }
+
+                if (dir == "right") {
+                    el.setSelectionRange(pos, pos);
+                }
+            }
+            else {
+                el.setSelectionRange(pos, pos);
+            }
+        } else if (el.createTextRange) {
+            var range = el.createTextRange();
+            range.move("character", pos);
+            range.select();
+        } else {
+            throw 'setCaretPosition() not supported';
+        }
+    }, getCaretPosition: function() {
+        var el = this.inputEl.dom;
+        if (typeof (el.selectionStart) === "number") {
+            return el.selectionStart;
+        } else if (document.selection && el.createTextRange) {
+            var range = document.selection.createRange();
+            range.collapse(true);
+            range.moveStart("character", -el.value.length);
+            return range.text.length;
+        } else {
+            throw 'getCaretPosition() not supported';
+        }
+    }
+});
+        Ext.override(Ext.grid.View, { enableTextSelection: true });
+        Ext.override(Ext.view.AbstractView, { 
+            loadingText:'Загрузка...'            
+        })        
+        Ext.override(Ext.form.field.Date, {
+            startDay: 1
+        });
+        Ext.override(Ext.picker.Date, {
+            startDay: 1
+        });
+        Ext.override(Ext.window.Window, {
+        constrainHeader:true,        
+        resizefun:function(){  
+            var wnd=this            
+            //console.log('WNDresized',wnd,wnd.width,wnd.height)
+             wnd.doAutoRender()
+             if(document.body.clientWidth<wnd.width+105)
+                { wnd.width=document.body.clientWidth;                    
+                    wnd.setPagePosition(0,wnd.y)
+                }
+             if(document.body.clientWidth<wnd.width+wnd.x)
+                { //wnd.width=document.body.clientWidth;
+                    wnd.setPagePosition(0,wnd.y)                                   
+                }                
+             if(document.body.clientHeight<wnd.height+105)
+                { wnd.height=document.body.clientHeight-105; 
+                    wnd.setPagePosition(wnd.x,52)                  
+                }  
+             if(document.body.clientHeight<wnd.height+wnd.y)
+                { //wnd.height=document.body.clientHeight-88;
+                   wnd.setPagePosition(wnd.x,52)               
+                } 
+            //wnd.setPagePosition(0,50)            
+            wnd.doLayout();  
+        },
+        addButtonInPanel:function(wnd){        
+            var viewport = Ext.ComponentQuery.query('viewport')[0]
+            console.log('viewport',viewport)
+            //var wndmanager=Ext.WindowManager
+            //var wndid = ++viewport.wndcount
+            var toolbar = viewport.down('toolbar[itemId="activepanel"]')
+            var habtn = toolbar.items.first()        
+            var btn = Ext.create('Ext.button.Button', {                
+                enableToggle: true,
+                cls: 'x-btn-default-toolbar-medium-over',
+                //overCls: 'x-btn-default-toolbar-medium-pressed',
+                icon: 'images/ico24_blank.png',
+                scale: 'medium',           
+                text: wnd.title, 
+                toggleHandler: function (button, state) {
+                //console.log('TOGGLE! button state',state, wnd.title, wnd.status)                
+                if(state==true){   
+                    wnd.show()                  
+                }
+                if(state==false && wnd.status=='active'){
+                    wnd.hide(/*wnd.ctrlbtn/*wnd.ghostPanel.toBack()*/)
+                }
+                }          
+            })
+            if(wnd.icon) btn.setIcon(wnd.icon)
+            wnd.ctrlbtn=btn
+            wnd.toolbar=toolbar            
+            //wnd.animateTarget=wnd.ctrlbtn            
+            toolbar.add([btn])            
+            if (habtn.disabled) {
+                habtn.enable()
+            }
+            console.log('addButtonInPanel')
+        },    
+        initComponent: function () {  
+            var wnd=this;
+            var wndcount=Ext.WindowManager.zIndexStack.length-4; 
+            wnd.minimizable=true;                        
+            wnd.x= 240 + (wndcount % 10) * 20;
+            wnd.y= 52 + (wndcount % 10 ) * 20;
+            //wnd.ctrlbtn=null;
+            this.callParent();
+            this.on('afterrender',function(wnd, eOpts){
+                console.log('afterrender',wnd.title)
+                
+             if(document.body.clientWidth<wnd.width)
+                { wnd.width=document.body.clientWidth;                    
+                    wnd.x=0
+                    //wnd.y=52                   
+                }
+             if(document.body.clientWidth<wnd.width+wnd.x)
+                { //wnd.width=document.body.clientWidth;                    
+                    wnd.x=0
+                    //wnd.y=52                   
+                }                
+             if(document.body.clientHeight<wnd.height)
+                { wnd.height=document.body.clientHeight-105;                        
+                    //wnd.x=0                    
+                    wnd.y=52                 
+                }  
+             if(document.body.clientHeight<wnd.height+wnd.y)
+                { //wnd.height=document.body.clientHeight-88;                        
+                    //wnd.x=0                   
+                   wnd.y=52                 
+                }    
+                wnd.doLayout();   
+                
+            })
+            Ext.EventManager.onWindowResize(wnd.resizefun,wnd)   
+            this.on('close',function(wnd, eOpts){
+                //console.log('wndclosed',wnd.title);                    
+                Ext.EventManager.removeResizeListener(wnd.resizefun,wnd);                   
+                var habtn = wnd.toolbar.items.first()   
+                wnd.toolbar.remove(wnd.ctrlbtn)
+                if (wnd.toolbar.items.getCount()==2) {
+                    habtn.disable()
+                }
+            })
+            this.on('boxready',function(wnd, width, height, eOpts){
+               //console.log('boxready' ,wnd.title);
+                //console.log(Ext.ComponentQuery.query('viewport')[0])
+                wnd.addButtonInPanel(wnd)
+            })
+//            this.on('afterrender',function(wnd, width, height, eOpts){
+//                console.log('afterrender' ,wnd.title);
+//                //console.log(Ext.ComponentQuery.query('viewport')[0])
+//                wnd.addButtonInPanel(wnd)
+//            })
+            this.on('show',function(wnd, eOpts){                                    
+                //console.log('wndshow' ,wnd.title,wnd.toolbar.getComponent(wnd.ctrlbtn));
+                if(wnd.closeAction=='hide' && wnd.toolbar.getComponent(wnd.ctrlbtn)==null) 
+                    wnd.addButtonInPanel(wnd)
+                    wnd.setActive(true)
+            }) 
+            this.on('activate',function(wnd, eOpts){                                    
+                //console.log('wndactivate' ,wnd.title);
+                if(!wnd.animateTarget) wnd.animateTarget=wnd.ctrlbtn 
+                wnd.ctrlbtn.toggle(true)
+                wnd.status='active' 
+            })
+            this.on('deactivate',function(wnd, eOpts){                                    
+                //console.log('wnddeactivate' ,wnd.title);
+                wnd.status='inactive'
+                wnd.ctrlbtn.toggle(false)               
+            })            
+            this.on('hide',function(wnd, eOpts){
+                if(wnd.closeAction!='hide'){
+                    //console.log('wndhide' ,wnd.title);
+                    wnd.ghostPanel.toBack()     
+                    //console.log(Ext.WindowManager.getActive())
+                    wnd.ctrlbtn.toggle(false)
+                }
+            })
+            this.on('minimize',function(wnd, eOpts){
+                //console.log('wndminimize' ,wnd.title);                
+                wnd.ctrlbtn.toggle(false)
+            }) 
+            this.on('beforeclose',function(wnd, eOpts){
+                //console.log('beforeclose' ,wnd.title);
+                wnd.animateTarget=null                             
+            })            
+        }
+    });
+    </script>
+    <script type="text/javascript" src="WRExtUtils.js"></script>
+    <script type="text/javascript" src="ObjectFromExcel.js"></script>
+    <script type="text/javascript" src="app/view/equipment/EquipmentStoreUtils.js"></script>
+    <!--<script type="text/javascript" src="app.js"></script>-->
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="extjs-4.2.1/locale/ext-lang-ru.js"></script>    
+</head>
+<body></body>
+</html>

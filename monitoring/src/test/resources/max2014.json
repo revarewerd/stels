@@ -1,0 +1,26 @@
+[
+    {
+        "_id": {
+            "$oid": "519cce34e4b0f612af8536ba"
+        },
+        "accountType": "fiz",
+        "balance": 73656,
+        "blockcause": "Не оплачен мониторинг. фин. дир Олег Леонидович +7 916 096 75 55   11965@mai.ru",
+        "cfemail": "",
+        "cffam": "",
+        "cffathername": "",
+        "cfmobphone1": "+79859221121",
+        "cfmobphone2": "",
+        "cfname": "",
+        "cfnote": "",
+        "cfworkphone1": "",
+        "comment": "бывший respect",
+        "contractCount": "0",
+        "contracts": [],
+        "fullClientName": "",
+        "name": "max2014",
+        "nickName": "Гутварев Александр",
+        "plan": "519cced8e4b0f612af8536bc",
+        "status": true
+    }
+]

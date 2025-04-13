@@ -1,0 +1,26 @@
+- hosts: [wrc_mongo, wrc_mongo_arb]
+  tasks:
+#    - name: Create a new primary partition
+#      parted:
+#        device: "{{ mongo_dedicated_disk }}"
+#        number: 1
+#        state: present
+#      register: sdb_info
+#    - debug:
+#        var: sdb_info
+
+    - name: Install xfs
+      apt: name=xfsprogs state=latest
+    - name: Create a xfs filesystem on {{ mongo_dedicated_disk }}
+      filesystem:
+        fstype: xfs
+        dev: "{{ mongo_dedicated_disk }}"
+      register: sdb_info_fs
+    - debug:
+        var: sdb_info_fs
+
+    - name: Ensure a directory for MongoDb Data
+      file: {path: "/var/data", state: directory, mode: 'u=rwx,g=rwx,o=r'}
+    - name: Mount a Disk for mongo if necessary
+#      when: mongo_dedicated_disk is defined
+      mount: { path: "/var/data", src: "{{ mongo_dedicated_disk }}", fstype: "xfs", state: "mounted"}

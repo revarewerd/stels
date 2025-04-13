@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+       ">
+
+
+    <!--<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">-->
+        <!--<property name="locations">-->
+            <!--<list>-->
+                <!--<value>file:${WAYRECALL_HOME}/conf/test.properties</value>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean id="mongoDBManager" class="ru.sosgps.wayrecall.core.MongoDBManager">
+        <property name="databaseName" value="Seniel-dev-test" />
+    </bean>
+
+    <!--<bean id="objectData" class="ru.sosgps.wayrecall.billing.object.ObjectData" />-->
+
+    <bean id="objectsPermissionsChecker" class="ru.sosgps.wayrecall.security.AllPermissivePermissionsChecker" />
+
+    <bean id="simpleLocalEventsStore" class="ru.sosgps.wayrecall.events.LocalEventsStore" />
+
+    <bean id="eventBus" class="org.axonframework.eventhandling.SimpleEventBus"/>
+
+    <bean id="objectsRepositoryReader" class="ru.sosgps.wayrecall.core.ObjectsRepositoryReader"/>
+
+    <bean class="ru.sosgps.wayrecall.initialization.MultiDbManager" id="multiDbManager" autowire-candidate="false">
+        <property name="config" ref="multiserverConfig"/>
+    </bean>
+    <bean id="multiserverConfig" class="ru.sosgps.wayrecall.initialization.MultiserverConfig" autowire-candidate="false"
+            factory-method="fromClassPath" >
+        <constructor-arg index="0" value="serverConfig"/>
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.core.MockingUserRolesChecker" />
+
+    <bean id="metaDataProvider" class="org.axonframework.auditing.CommandMetaDataProvider"/>
+
+    <bean id="auditingInterceptor" class="org.axonframework.auditing.AuditingInterceptor">
+        <property name="auditDataProvider" ref="metaDataProvider"/>
+    </bean>
+
+    <bean id="eventStore" class="ru.sosgps.wayrecall.core.axon.AxonEventsWriter">
+        <constructor-arg index="0">
+            <bean class="org.axonframework.serializer.bson.DBObjectXStreamSerializer"/>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <bean class="org.axonframework.eventstore.mongo.DefaultMongoTemplate">
+                <constructor-arg index="0" >
+                    <bean factory-bean="mongoDBManager" factory-method="getClient"/>
+                </constructor-arg>
+                <constructor-arg index="1" >
+                    <bean factory-bean="mongoDBManager" factory-method="getDatabaseName"/>
+                </constructor-arg>
+                <constructor-arg index="2" value="domainEvents"/>
+                <constructor-arg index="3" value="snapshotEvents"/>
+                <constructor-arg index="4">
+                    <null/>
+                </constructor-arg>
+                <constructor-arg index="5">
+                    <null/>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+        <property name="viewCollectionName" value="domainEventsView"/>
+    </bean>
+
+    <bean id="snapshotter" class="org.axonframework.eventsourcing.SpringAggregateSnapshotter">
+        <property name="eventStore" ref="eventStore"/>
+        <property name="executor">
+            <util:constant static-field="org.axonframework.common.DirectExecutor.INSTANCE"/>
+        </property>
+    </bean>
+
+    <bean id="commandBus" class="ru.sosgps.wayrecall.utils.SpringContextCommandBusWrapper">
+        <constructor-arg index="0">
+            <bean  class="org.axonframework.commandhandling.SimpleCommandBus" >
+                <property name="dispatchInterceptors">
+                    <ref bean="secureInterceptor"/>
+                </property>
+                <property name="handlerInterceptors">
+                    <ref bean="auditingInterceptor"/>
+                </property>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <axon:event-sourcing-repository id="dealerAggregatesRepository"
+                                    aggregate-type="ru.sosgps.wayrecall.billing.dealer.DealerAggregate">
+        <axon:snapshotter-trigger event-count-threshold="5" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
+
+    <bean id="commandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="gatewayInterface" value="ru.sosgps.wayrecall.core.SecureGateway"/>
+    </bean>
+
+    <axon:annotation-config />
+
+    <bean id="secureInterceptor" class="ru.sosgps.wayrecall.core.SecureInterceptor"/>
+
+    <bean class="ru.sosgps.wayrecall.billing.dealer.DealerCommandsHandler" />
+
+    <bean class="ru.sosgps.wayrecall.billing.dealer.DealerReadDBWriter" />
+
+    <bean class="ru.sosgps.wayrecall.billing.dealer.DealersTariffPlans" />
+
+    <bean class="ru.sosgps.wayrecall.billing.dealer.DealersService" >
+        <property name="instanceName" value="default" />
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.TestDataBaseFiller">
+        <property name="dbName" value="Seniel-test1-test"/>
+        <property name="mongoDumps">
+            <list><value>serverConfig/wrcinstances/test1/data/</value></list>
+        </property>
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.billing.dealer.DealerMonthlyPaymentService" />
+
+    <bean id="eventViewConverter" class="ru.sosgps.wayrecall.core.axon.EventsViewConverter"/>
+
+
+</beans>

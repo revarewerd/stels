@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress SpringFacetInspection -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${WAYRECALL_HOME}/conf/global.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <context:component-scan base-package="ru.sosgps.wayrecall.billing">
+        <context:exclude-filter type="annotation" expression="ru.sosgps.wayrecall.utils.ExtDirectService"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <context:component-scan base-package="ru.sosgps.wayrecall.core">
+        <context:exclude-filter type="annotation" expression="ru.sosgps.wayrecall.utils.ExtDirectService"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <context:component-scan base-package="ru.sosgps.wayrecall.security"/>
+    <context:component-scan base-package="ru.sosgps.wayrecall.data"/>
+    <context:annotation-config/>
+
+    <!--<bean id="mongoDBManager" class="ru.sosgps.wayrecall.core.MongoDBManager">-->
+    <!--<property name="databaseName" value="${global.defaultmongodb.databaseName}"/>-->
+    <!--<property name="host" value="${global.defaultmongodb.host}"/>-->
+    <!--<property name="port" value="${global.defaultmongodb.port}"/>-->
+    <!--</bean>-->
+
+    <bean id="objectsPermissionsChecker" class="ru.sosgps.wayrecall.security.AllPermissivePermissionsChecker"/>
+
+    <!--<bean id="simpleLocalEventsStore" class="ru.sosgps.wayrecall.events.LocalEventsStore"/>-->
+
+    <bean id="packageStore" class="ru.sosgps.wayrecall.data.PermissionChekedPackageStore">
+        <constructor-arg index="0" ref="cachedPackageStore"/>
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.processing.AccumulatedParamsReaggregator" />
+
+    <!--<bean id="newGpsEventMapper" class="ru.sosgps.wayrecall.data.NewGpsEventMapper"/>-->
+    <bean id="accountsStoreService" class="ru.sosgps.wayrecall.billing.account.AccountsStoreService"/>
+    <bean id="equipmentStoreService" class="ru.sosgps.wayrecall.billing.equipment.EquipmentStoreService"/>
+    <bean id="allObjectsService" class="ru.sosgps.wayrecall.billing.AllObjectsService"/>
+    <bean id="usersService" class="ru.sosgps.wayrecall.billing.user.UsersService"/>
+
+    <bean id="dbPacketsWriter" class="ru.sosgps.wayrecall.data.PermissionCheckedDBPacketsWriter">
+        <constructor-arg index="0">
+            <bean class="ru.sosgps.wayrecall.data.DirectMongoDBPacketsWriter"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="dealersTariffPlans" class="ru.sosgps.wayrecall.billing.dealer.DealersTariffPlans" />
+    
+</beans>

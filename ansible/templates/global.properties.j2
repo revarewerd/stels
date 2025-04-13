@@ -1,0 +1,36 @@
+global.defaultmongodb.databaseName = Seniel-dev2
+global.defaultmongodb.port=27017
+global.smsgate=m2mSmsGate
+global.smsgate.federalbydefault=true
+global.monitoringUrl= {{ monitoringUrl }}
+global.monitoringApiUrl=http://localhost:9080
+global.amqBrokerURL=tcp\://localhost\:61616
+
+global.defaultpg.url=jdbc:postgresql://localhost:6543/seniel-pg
+global.defaultpg.user={{ pg_instance[0].pg_user }}
+global.defaultpg.password={{ pg_instance[0].pg_password }}
+global.defaultpg.maxactive = 4
+global.defaultpg.maxWait = 5000
+
+global.sysemail=info@ksb-stels.ru
+global.sysemail.smtphost=mail.ksb-stels.ru
+global.sysemail.login=info
+global.sysemail.password=Asdqwe13a
+global.vhostsuffixes=ksb-stels.ru
+
+global.odsmosru.timeout=2000
+
+global.timedNotificationInterval = 300000
+
+global.errornotificationAddress = errors@ksb-stels.ru
+
+global.port=9080
+global.security.port=9081
+## uncomment to setup sertificate
+#global.security.acme.server=acme://letsencrypt.org
+global.security.acme.securedomains=wayrecall.ksb-stels.ru
+global.security.keystorepath=../security/wayrecall2.keystore
+global.security.keystorepath.absolute=/home/niks/Wayrecallhome/security
+global.security.keystorepassword=ksbstels2016
+
+instance.m2mSmsGate.lastHours = 5

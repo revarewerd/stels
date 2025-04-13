@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+       <!--xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+       <!--xmlns:context="http://www.springframework.org/schema/context"-->
+       <!--xmlns:jms="http://www.springframework.org/schema/jms"-->
+       <!--xmlns:p="http://www.springframework.org/schema/p"-->
+       <!--xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd-->
+          <!--http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd-->
+<!--">-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+       <property name="locations">
+           <list>
+               <value>file:${WAYRECALL_HOME}/conf/global.properties</value>
+               <!--<value>file:${WAYRECALL_HOME}/conf/monitoring.properties</value>-->
+           </list>
+       </property>
+    </bean>
+
+    <!--<context:component-scan base-package="ru.sosgps">-->
+        <!--<context:exclude-filter type="annotation" expression="ru.sosgps.wayrecall.utils.ExtDirectService"/>-->
+    <!--</context:component-scan>-->
+    <context:annotation-config/>
+
+    <bean id="mongoPackStore" class="ru.sosgps.wayrecall.data.MongoPackagesStore">
+        <property name="skipPreloadCache" value="true"/>
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.data.MapProtocolPackConverter"/>
+
+    <bean id="mongoDBManager" class="ru.sosgps.wayrecall.core.MongoDBManager">
+        <property name="databaseName" value="${instance.defaultmongodb.databaseName}"/>
+        <property name="host" value="${instance.defaultmongodb.servers}"/>
+        <property name="port" value="${instance.defaultmongodb.port}"/>
+    </bean>
+
+    <bean class="ru.sosgps.wayrecall.core.ObjectsRepositoryReader" />
+
+    <bean class="ru.sosgps.wayrecall.utils.concurrent.ScalaExecutorService">
+        <constructor-arg index="0" type="java.lang.String" >
+            <value type="java.lang.String">odsSendingpool</value>
+        </constructor-arg>
+        <constructor-arg index="1" type="int" value="5" />
+        <constructor-arg index="2" value="5" />
+        <constructor-arg index="3" type="boolean" value="true" />
+        <constructor-arg index="4" value="1" />
+        <constructor-arg index="5">
+            <util:constant static-field="java.util.concurrent.TimeUnit.SECONDS" />
+        </constructor-arg>
+        <constructor-arg index="6">
+            <bean class="java.util.concurrent.ArrayBlockingQueue">
+                <constructor-arg index="0" value="3000"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg index="7">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$AbortPolicy"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="resender" class="ru.sosgps.wayrecall.odsmosru.Resender"/>
+
+    <bean class="ru.sosgps.wayrecall.odsmosru.AllowAllEnabledChecker"/>
+
+    <bean class="ru.sosgps.wayrecall.odsmosru.ODSMosruSender">
+        <!--<property name="url" value="${global.odsmosru.wsdl}"/>-->
+        <property name="timeOut" value="${global.odsmosru.timeout:5000}"/>
+    </bean>
+
+    <bean id="localEventsStore" class="ru.sosgps.wayrecall.events.LocalEventsStore"/>
+
+</beans>

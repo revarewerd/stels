@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${WAYRECALL_HOME}/conf/global.properties</value>
+                <value>file:${WAYRECALL_HOME}/conf/packreceiver.properties</value>
+            </list>
+        </property>
+    </bean>
+    <context:component-scan base-package="ch.ralscha.extdirectspring"/>
+    <context:component-scan base-package="ru.sosgps.wayrecall.billing" use-default-filters="false">
+        <context:include-filter type="annotation" expression="ru.sosgps.wayrecall.utils.ExtDirectService"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+    <!--<context:component-scan base-package="ru.sosgps.wayrecall.data" use-default-filters="false">-->
+        <!--<context:include-filter type="annotation" expression="ru.sosgps.wayrecall.utils.ExtDirectService"/>-->
+        <!--<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+    <!--</context:component-scan>-->
+    <bean id="sleeperMessages" class="ru.sosgps.wayrecall.data.sleepers.SleeperMessages"/>
+    <mvc:annotation-driven/>
+
+    <bean class="ru.sosgps.wayrecall.monitoring.web.ErrorReporter" />
+
+    <import resource="classpath:ru/sosgps/wayrecall/utils/web/extjsstore/EDS-controller-default-config.xml"></import>
+    
+    <bean id="configFileLoader" class="ru.sosgps.wayrecall.billing.equipment.ConfigFileLoader">
+        <property name="configPath" value="${packreceiver.ruptela.configpath}" />
+    </bean>
+    <bean id="AccountsEquipmentService" class="ru.sosgps.wayrecall.billing.equipment.AccountsEquipmentService">
+        <property name= "AccountsStoreService" ref= "accountsStoreService"  />
+    </bean>
+    <!--<bean id="AccountsStoreService" class="ru.sosgps.wayrecall.billing.account.AccountsStoreService">       -->
+    <!--</bean>-->
+
+    <bean class="ru.sosgps.wayrecall.billing.AtmosphereEventHandler"/>
+
+    <bean id="gpsAndSMSAtmospherePublisher" class="ru.sosgps.wayrecall.billing.GPSAndSMSAtmospherePublisher" />
+
+    <bean id="loginService" class="ru.sosgps.wayrecall.security.LoginService"/>
+
+    <bean class="ru.sosgps.wayrecall.billing.retranslator.AfterBlockingRetranslator"/>
+
+    <bean id="equipmentData" class="ru.sosgps.wayrecall.billing.equipment.EquipmentData">
+        <property name="multiDbManager" ref="multiDbManager"/>
+    </bean>
+
+    <bean id="dataFileLoader" class="ru.sosgps.wayrecall.monitoring.web.DataFileLoader"/>
+    <bean id="sensorsList" class="ru.sosgps.wayrecall.monitoring.web.SensorsList"/>
+
+
+</beans>

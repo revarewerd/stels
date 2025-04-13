@@ -1,0 +1,210 @@
+2	Digital_Input_1
+3	Digital_Input_2
+4	Digital_Input_3
+5	Digital_Input_4
+6	Modem_Temperature
+7	Time_record
+8	Dsitance_record
+9	Course_record
+10	CANBUS_request_supported
+11	CANBUS_diagnostics_supported
+12	CANBUS_FMS_software
+13	CANBUS_vehicle_motion
+14	CANBUS_driver_1_time
+15	CANBUS_driver_1_card
+16	CANBUS_driver_2_time
+17	CANBUS_driver_2_card
+18	fuel_counter_1
+19	fuel_counter_2
+20	fuel_counter_3
+21	fuel_counter_4
+22	Analog_Input_1
+23	Analog_Input_2
+
+24	Tacho_ddd_available
+
+
+27	GSM_Signal_Strength
+28	Current_Profile
+29	Power_Supply_Voltage
+30	Battery_Voltage
+
+31	External_PDFD_panel_info
+
+32	PCB_Temperature
+
+34	iButton_ID
+35	CANBUS_ClutchS
+36	CANBUS_BreakS
+37	CANBUS_CruiseCS
+38	CANBUS_PTOstate
+39	CANBUS_Engine_PLCS
+40	CANBUS_Tire_location
+41	CANBUS_Axle_weight
+42	CANBUS_system_event
+43	CANBUS_handling_information
+44	CANBUS_direction_indicator
+
+45	Din1_hours
+46	Din2_hours
+47	Din3_hours
+48	Din4_hours
+
+65	Virtual_Odometer
+
+66	Digital_fuel_sensorA1
+67	Digital_fuel_sensor_B1
+68	Digital_fuel_sensorA2
+69	Digital_fuel_sensorA3
+
+
+
+70	Temp_sensor_ID_0
+71	Temp_sensor_ID_1
+72	Temp_sensor_ID_2
+
+77	odometer_delta
+
+78	Temperature_Sensor_0
+79	Temperature_Sensor_1
+80	Temperature_Sensor_2
+
+81	Digital_fuel_sensorA4
+82	Digital_fuel_sensorA5
+83	Digital_fuel_sensorA6
+84	Digital_fuel_sensorA7
+85	Digital_fuel_sensorA8
+86	Digital_fuel_sensorA9
+87	Digital_fuel_sensorA10
+
+89	CANBUS_ambient_air_temperature
+90	CANBUS_fuel_economy
+91	CANBUS_PTO
+92	CANBUS_HRFC
+
+114	CANBUS_Distance
+115	CANBUS_coolant_temperature
+116	CANBUS_fuel_rate
+
+
+
+
+123	CANBUS_Vehicle_Id_1
+124	CANBUS_Vehicle_Id_2
+125	CANBUS_Vehicle_Id_3
+126	CANBUS_First_Driver_Id1
+127	CANBUS_First_Driver_Id2
+128	CANBUS_Second_Driver_Id_1
+129	CANBUS_Second_Driver_Id_2
+
+
+130	ECO_max_speed
+131	ECO_overspeed
+132	ECO_rpm_red
+133	ECO_max_rpm
+134	ECO_braking_events
+135	ECO_ext_hrsh_braking
+136	ECO_harsh_acceleration
+137	ECO_idling_t
+138	ECO_cruise_control
+139	ECO_engine_on
+
+150	GSM_Operator
+
+152	TCO_Vehicle_ID_1
+153	TCO_Vehicle_ID_2
+154	TCO_Vehicle_ID_3
+155	TCO_first_Driver_ID_1
+156	TCO_first_Driver_ID_2
+157	TCO_second_Driver_ID_1
+158	TCO_second_Driver_ID_2
+159	TCO_first_driver_state
+160	TCO_second_driver_state
+161	TCO_first_driver_card
+162	TCO_second_driver_card
+163	TCO_Dsitance
+164	TCO_trip
+165	TCO_vehicle_speed
+166	TCO_RPM
+167	TCO_registration_number_1
+168	TCO_registration_number_2
+
+170	Battery_Current
+
+173	Movement_sensor
+
+176	GPS_speed
+
+177	TK_fuel_level
+178	TK_battery_voltage
+179	TK_total_electric_hours
+180	TK_total_vehicle_hours
+181	TK_total_engine_hours
+182	TK_alarm_type
+183	TK_alarm_code
+184	TK_return_air_temperature
+185	TK_discharge_temperature
+186	TK_temperature_setpoint
+187	TK_evaporator_coil_temperature
+188	TK_operating_mode
+189	TK_cycle_mode
+190	TK_high_speed_status
+191	TK_door_status
+192	TK_diesel_electric_status
+
+197	CANBUS_RPM
+
+203	CANBUS_Engine_Hours
+204	CANBUS_service_distance
+
+206	CANBUS_AccPedal_position
+207	Fuel_level_%
+208	CANBUS_Fuel_used
+209	CANBUS__Secondary_fuel_level_%
+210	CANBUS_WBSpeed
+
+213	CANBUS_tachogr._Vehicle_speed
+
+215	CANBUS_driver_1_state
+216	CANBUS_driver_2_state
+217	CANBUS_tachograph_performance
+218	CANBUS_over_speed
+219	CANBUS_Axle_location
+
+220	ME_Sound_type
+221	ME_Hi/Low_beam
+222	ME_Pedestrians_in_DZ
+223	ME_Pedestrians_FCW
+224	ME_Night_time_indicator
+225	ME_Dusk_time_indicator
+226	ME_Error_code
+227	ME_Error_valid
+228	ME_Zero_speed
+229	ME_Headway_valid
+230	ME_Headway_measurement
+231	ME_LDW_off
+232	ME_Right_LDW_on
+233	ME_Left_LDW_on
+234	ME_Maintenance
+235	ME_Failsafe
+236	ME_FCW_on
+237	ME_Headway_warning_level
+238	ME_Hi_beam
+239	ME_Low_beam
+240	ME_Wipers
+241	ME_Right_signal
+242	ME_Left_signal
+243	ME_Brake_signal
+244	ME_Wipers_available
+245	ME_Low_beam_available
+246	ME_Hi_beam_available
+247	ME_Speed_available
+248	ME_Speed
+
+
+250	Extension1
+251	Extension2
+252	Extension3
+253	Extension4
+254	Extension5
+255	Extension6
