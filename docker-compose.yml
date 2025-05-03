@@ -26,3 +26,5 @@ services:
       - POSTGRES_DBNAME=seniel-pg
     ports:
     - 5432:5432
+
+#в рамках теста вношу сюда сообщение

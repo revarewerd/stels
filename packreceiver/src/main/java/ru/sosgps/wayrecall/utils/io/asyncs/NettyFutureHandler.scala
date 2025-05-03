@@ -53,7 +53,7 @@ abstract class NettyFutureHandler extends ByteToMessageDecoder with grizzled.slf
       override def alloc(size: Int): ByteBuf = ctx.alloc().buffer(size)
 
       override def write(bb: ByteBuf): Future[Unit] = ctx.writeAndFlush(bb)
-    }ч
+    }
 
     def close(): Unit = ctx.close()
   }
