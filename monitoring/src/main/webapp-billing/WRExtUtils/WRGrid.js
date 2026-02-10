@@ -1,5 +1,5 @@
 Ext.Loader.setConfig({enabled: true});
-Ext.Loader.setPath('Ext.ux', 'extjs-4.2.1/examples/ux');
+Ext.Loader.setPath('Ext.ux', '/extjs-4.2.1/examples/ux');
 
 Ext.define('WRExtUtils.WRGrid', {
     extend: 'Ext.grid.Panel',

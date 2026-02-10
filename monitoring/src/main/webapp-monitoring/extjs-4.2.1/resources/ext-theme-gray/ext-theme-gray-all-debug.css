@@ -7573,7 +7573,7 @@ body.x-nbr .x-btn-default-large-frameInfo {
 /* */
 /* line 246, ../../../ext-theme-neutral/sass/src/button/Button.scss */
 .x-btn-default-toolbar-small {
-  border-color: #bbbbbb;
+  border-color: transparent;
 }
 
 /* line 137, ../../../ext-theme-base/sass/etc/mixins/frame.scss */
@@ -7586,14 +7586,7 @@ body.x-nbr .x-btn-default-large-frameInfo {
   padding: 2px 2px 2px 2px;
   border-width: 1px;
   border-style: solid;
-  background-image: none;
-  background-color: #f8f8f8;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #eeeeee));
-  background-image: -webkit-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: -moz-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: -o-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: -ms-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: linear-gradient(top, #ffffff, #eeeeee);
+  background-color: transparent;
 }
 
 /* line 189, ../../../ext-theme-base/sass/etc/mixins/frame.scss */
@@ -7859,7 +7852,6 @@ body.x-nbr .x-btn-default-toolbar-small-frameInfo {
   background-image: -webkit-linear-gradient(top, #fbfbfb, #e9e9e9);
   background-image: -moz-linear-gradient(top, #fbfbfb, #e9e9e9);
   background-image: -o-linear-gradient(top, #fbfbfb, #e9e9e9);
-  background-image: -ms-linear-gradient(top, #fbfbfb, #e9e9e9);
   background-image: linear-gradient(top, #fbfbfb, #e9e9e9);
 }
 
@@ -7872,7 +7864,6 @@ body.x-nbr .x-btn-default-toolbar-small-frameInfo {
   background-image: -webkit-linear-gradient(top, #fbfbfb, #e9e9e9);
   background-image: -moz-linear-gradient(top, #fbfbfb, #e9e9e9);
   background-image: -o-linear-gradient(top, #fbfbfb, #e9e9e9);
-  background-image: -ms-linear-gradient(top, #fbfbfb, #e9e9e9);
   background-image: linear-gradient(top, #fbfbfb, #e9e9e9);
 }
 
@@ -7886,7 +7877,6 @@ body.x-nbr .x-btn-default-toolbar-small-frameInfo {
   background-image: -webkit-linear-gradient(top, #c7c7c7, #e0e0e0);
   background-image: -moz-linear-gradient(top, #c7c7c7, #e0e0e0);
   background-image: -o-linear-gradient(top, #c7c7c7, #e0e0e0);
-  background-image: -ms-linear-gradient(top, #c7c7c7, #e0e0e0);
   background-image: linear-gradient(top, #c7c7c7, #e0e0e0);
 }
 
@@ -8063,7 +8053,7 @@ body.x-nbr .x-btn-default-toolbar-small-frameInfo {
 /* */
 /* line 246, ../../../ext-theme-neutral/sass/src/button/Button.scss */
 .x-btn-default-toolbar-medium {
-  border-color: #bbbbbb;
+  border-color: transparent;
 }
 
 /* line 137, ../../../ext-theme-base/sass/etc/mixins/frame.scss */
@@ -8076,14 +8066,8 @@ body.x-nbr .x-btn-default-toolbar-small-frameInfo {
   padding: 3px 3px 3px 3px;
   border-width: 1px;
   border-style: solid;
-  background-image: none;
-  background-color: #f8f8f8;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #eeeeee));
-  background-image: -webkit-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: -moz-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: -o-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: -ms-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: linear-gradient(top, #ffffff, #eeeeee); }
+  background-color: transparent;
+}
 
 /* line 189, ../../../ext-theme-base/sass/etc/mixins/frame.scss */
 .x-btn-default-toolbar-medium-mc {
@@ -8348,8 +8332,8 @@ body.x-nbr .x-btn-default-toolbar-medium-frameInfo {
   background-image: -webkit-linear-gradient(top, #fbfbfb, #e9e9e9);
   background-image: -moz-linear-gradient(top, #fbfbfb, #e9e9e9);
   background-image: -o-linear-gradient(top, #fbfbfb, #e9e9e9);
-  background-image: -ms-linear-gradient(top, #fbfbfb, #e9e9e9);
-  background-image: linear-gradient(top, #fbfbfb, #e9e9e9); }
+  background-image: linear-gradient(top, #fbfbfb, #e9e9e9);
+}
 
 /* line 516, ../../../ext-theme-neutral/sass/src/button/Button.scss */
 .x-btn-default-toolbar-medium-focus {
@@ -8373,8 +8357,8 @@ body.x-nbr .x-btn-default-toolbar-medium-frameInfo {
   background-image: -webkit-linear-gradient(top, #c7c7c7, #e0e0e0);
   background-image: -moz-linear-gradient(top, #c7c7c7, #e0e0e0);
   background-image: -o-linear-gradient(top, #c7c7c7, #e0e0e0);
-  background-image: -ms-linear-gradient(top, #c7c7c7, #e0e0e0);
-  background-image: linear-gradient(top, #c7c7c7, #e0e0e0); }
+  background-image: linear-gradient(top, #c7c7c7, #e0e0e0);
+}
 
 /* line 573, ../../../ext-theme-neutral/sass/src/button/Button.scss */
 .x-btn-default-toolbar-medium-over .x-frame-tl,
@@ -8549,7 +8533,7 @@ body.x-nbr .x-btn-default-toolbar-medium-frameInfo {
 /* */
 /* line 246, ../../../ext-theme-neutral/sass/src/button/Button.scss */
 .x-btn-default-toolbar-large {
-  border-color: #bbbbbb;
+  border-color: transparent;
 }
 
 /* line 137, ../../../ext-theme-base/sass/etc/mixins/frame.scss */
@@ -8562,14 +8546,7 @@ body.x-nbr .x-btn-default-toolbar-medium-frameInfo {
   padding: 3px 3px 3px 3px;
   border-width: 1px;
   border-style: solid;
-  background-image: none;
-  background-color: #f8f8f8;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #eeeeee));
-  background-image: -webkit-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: -moz-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: -o-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: -ms-linear-gradient(top, #ffffff, #eeeeee);
-  background-image: linear-gradient(top, #ffffff, #eeeeee); 
+  background-color: transparent;
 }
 
 /* line 189, ../../../ext-theme-base/sass/etc/mixins/frame.scss */

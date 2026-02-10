@@ -4,3 +4,12 @@ ${env.WAYRECALL_HOME}/*
 WAYRECALL_HOME_IS_UNDEFINED/*
 
 *.iml
+
+# Генерируемые / runtime файлы
+bin/
+data/
+logs/
+pg/
+sessionLog/
+staticImgTempStore/
+osmTilesCache/
